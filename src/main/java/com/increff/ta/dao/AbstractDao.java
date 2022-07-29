@@ -1,0 +1,15 @@
+package com.increff.ta.dao;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+public class AbstractDao {
+
+        @PersistenceContext
+        protected EntityManager em;
+
+        protected <T> TypedQuery<T> getQuery(String jpql, Class<T> clazz) {
+            return em.createQuery(jpql, clazz);
+        }
+}
