@@ -15,6 +15,7 @@ public class BinSkuDao extends AbstractDao {
 
     private final String select_by_binId_and_globalSkuId = "SELECT e from BinSku e where e.bin.binId=:binId and e.product.globalSkuId=:globalSkuId";
 
+    private final String select_total_count_by_globalSkuId = "SELECT SUM(e.quantity) from BinSku e where e.product.globalSkuId=:globalSkuId";
     @Transactional
     public void insert(BinSku binSku) {
         em.persist(binSku);
@@ -31,6 +32,13 @@ public class BinSkuDao extends AbstractDao {
         query.setParameter("binId", binId);
         query.setParameter("globalSkuId", globalSkuId);
         return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    public Long findTotalCountByGlobalSkuId(Long globalSkuId){
+        TypedQuery<Long> query = getQuery(select_total_count_by_globalSkuId, Long.class);
+        query.setParameter("globalSkuId", globalSkuId);
+        return query.getResultList().stream().findFirst().orElse(null);
+
     }
 
     @Transactional
