@@ -14,6 +14,10 @@ public class UserService {
 
     public void createUser(UserForm userData){
         User user = convertFormToPojo(userData);
+        if(userDao.selectByName(user.getName()) == null){
+            throw new ApiException("Client name already in use");
+        }
+
         userDao.insert(user);
     }
 

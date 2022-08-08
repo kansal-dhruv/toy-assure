@@ -3,8 +3,6 @@ package com.increff.ta.dao;
 import com.increff.ta.pojo.Product;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
+
 @Api
 @RestController
 public class UserController {
@@ -17,6 +19,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Transactional
     @ApiOperation(value = "Used to create new users")
     @RequestMapping(value = "api/user/create", method = RequestMethod.POST)
     public String createUser(@RequestBody UserForm userData) {

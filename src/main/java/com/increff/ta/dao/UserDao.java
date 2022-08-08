@@ -3,20 +3,23 @@ package com.increff.ta.dao;
 import com.increff.ta.pojo.User;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 @Repository
-public class UserDao {
+public class UserDao extends AbstractDao{
 
-    @PersistenceContext
-    private EntityManager em;
-
+    private final String select_by_name = "SELECT e from User e where e.name=:name";
     @Transactional
     public void insert(User user){em.persist(user);}
 
     public User selectById(Long id){
         return em.find(User.class, id);
+    }
+
+    public User selectByName(String name){
+        TypedQuery<User> query = getQuery(select_by_name, User.class);
+        query.setParameter("name", name);
+        return query.getResultList().stream().findFirst().orElse(null);
     }
 }

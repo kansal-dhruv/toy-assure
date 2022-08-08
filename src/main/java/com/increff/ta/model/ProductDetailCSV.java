@@ -4,7 +4,6 @@ import com.opencsv.bean.CsvBindByPosition;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.UniqueConstraint;
 
 @MappedSuperclass
 public class ProductDetailCSV {

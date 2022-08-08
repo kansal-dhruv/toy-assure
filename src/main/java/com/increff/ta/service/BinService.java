@@ -2,13 +2,10 @@ package com.increff.ta.service;
 
 import com.increff.ta.dao.BinDao;
 import com.increff.ta.dao.BinSkuDao;
-import com.increff.ta.dao.InventoryDao;
 import com.increff.ta.dao.ProductDao;
 import com.increff.ta.model.BinClientSkuCSV;
-import com.increff.ta.model.ProductDetailCSV;
 import com.increff.ta.pojo.Bin;
 import com.increff.ta.pojo.BinSku;
-import com.increff.ta.pojo.Inventory;
 import com.increff.ta.pojo.Product;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
