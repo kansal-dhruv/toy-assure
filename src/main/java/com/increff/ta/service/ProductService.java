@@ -29,7 +29,7 @@ public class ProductService {
 
     public String addProductsFromCSV(MultipartFile csvFile, Long clientId) throws ApiException {
         User user = userDao.selectById(clientId);
-        if (user !=null && user.getType().equals(UserType.CLIENT)) {
+        if (user != null && user.getType().equals(UserType.CLIENT)) {
             List<ProductDetailCSV> productdetails = null;
             try {
                 productdetails = new CsvToBeanBuilder(new InputStreamReader(new ByteArrayInputStream(csvFile.getBytes()), "UTF8"))
@@ -41,10 +41,10 @@ public class ProductService {
             if (clientToClientSkuId.size() == productdetails.size()) {
                 for (ProductDetailCSV productdetail : productdetails) {
                     Product product = productDao.findByClientSkuId(productdetail.getClientSkuId());
-                    if(product!=null){
-                        product = convertCSVtoPojo(product, user, product.getGlobalSkuId());
+                    if (product != null) {
+                        product = convertCSVtoPojo(productdetail, user, product.getGlobalSkuId());
                     } else {
-                        product = convertCSVtoPojo(product, user, null);
+                        product = convertCSVtoPojo(productdetail, user, null);
                     }
                     productDao.addProduct(product);
                 }
@@ -55,7 +55,7 @@ public class ProductService {
 
     private Product convertCSVtoPojo(ProductDetailCSV productDetail, User user, Long globalSkuId) {
         Product product = new Product();
-        if(globalSkuId!=null){
+        if (globalSkuId != null) {
             product.setGlobalSkuId(globalSkuId);
         }
         product.setClient(user);

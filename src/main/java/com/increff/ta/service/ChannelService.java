@@ -35,7 +35,7 @@ public class ChannelService {
     private ChannelListingDao channelListingDao;
 
     public void addChannel(Channel channel){
-        if(channelDao.findByChannelName(channel.getName()) == null){
+        if(channelDao.findByChannelName(channel.getName()) != null){
             throw new ApiException("Channel name already exists");
         } else {
             channelDao.insertOrUpdate(channel);

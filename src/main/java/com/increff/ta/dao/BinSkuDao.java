@@ -5,24 +5,21 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public class BinSkuDao extends AbstractDao {
 
-    private final String select_by_globalSkuId = "SELECT e from BinSku e where e.globalSkuId=:globalSkuId";
+    private final String select_by_globalSkuId = "SELECT e from BinSku e where e.product.globalSkuId=:globalSkuId ORDER BY e.quantity DESC";
 
     private final String select_by_binId_and_globalSkuId = "SELECT e from BinSku e where e.bin.binId=:binId and e.product.globalSkuId=:globalSkuId";
 
     private final String select_total_count_by_globalSkuId = "SELECT SUM(e.quantity) from BinSku e where e.product.globalSkuId=:globalSkuId";
-    @Transactional
-    public void insert(BinSku binSku) {
-        em.persist(binSku);
-    }
 
-    public BinSku findByglobalSkuId(Long globalSkuId) {
+    public List<BinSku> findByglobalSkuId(Long globalSkuId) {
         TypedQuery<BinSku> query = getQuery(select_by_globalSkuId, BinSku.class);
         query.setParameter("globalSkuId", globalSkuId);
-        return query.getResultList().stream().findFirst().orElse(null);
+        return query.getResultList();
     }
 
     public BinSku findByBinIdAndGlobalSkuId(Long binId,Long globalSkuId) {

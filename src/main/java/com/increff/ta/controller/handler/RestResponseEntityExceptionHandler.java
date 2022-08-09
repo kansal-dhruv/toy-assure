@@ -17,6 +17,7 @@ public class RestResponseEntityExceptionHandler
             = {ApiException.class})
     protected ResponseEntity<Object> handleConflictApiException(
             RuntimeException ex, WebRequest request) {
+        ex.printStackTrace();
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
@@ -25,6 +26,7 @@ public class RestResponseEntityExceptionHandler
             = {Exception.class})
     protected ResponseEntity<Object> handleConflict(
             RuntimeException ex, WebRequest request) {
+        ex.printStackTrace();
         return handleExceptionInternal(ex, "Internal Server error",
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }

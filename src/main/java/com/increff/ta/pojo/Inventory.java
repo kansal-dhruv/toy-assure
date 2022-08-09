@@ -15,13 +15,11 @@ public class Inventory {
     @JoinColumn(name = "globalSkuId")
     private Product product;
 
-    private Long availableQuantity;
+    private Long availableQuantity=0L;
 
-    @ColumnDefault(value = "0")
-    private Long allocatedQuantity;
+    private Long allocatedQuantity=0L;
 
-    @ColumnDefault(value = "0")
-    private Long fulfilledQuantity;
+    private Long fulfilledQuantity=0L;
 
     public Long getId() {
         return id;
