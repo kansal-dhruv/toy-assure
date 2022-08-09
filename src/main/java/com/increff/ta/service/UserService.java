@@ -21,9 +21,9 @@ public class UserService {
     }
 
     public User convertFormToPojo(UserForm userForm){
-        User userpojo = new User();
-        userpojo.setName(userForm.getName());
-        userpojo.setType(userForm.getType());
-        return userpojo;
+        User userPojo = new User();
+        userPojo.setName(userForm.getName());
+        userPojo.setType(userForm.getType());
+        return userPojo;
     }
 }

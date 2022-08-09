@@ -2,14 +2,9 @@ package com.increff.ta.model;
 
 import com.opencsv.bean.CsvBindByPosition;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-
-@MappedSuperclass
 public class ProductDetailCSV {
 
     @CsvBindByPosition(position = 0)
-    @Column(unique = true)
     protected String clientSkuId;
 
     @CsvBindByPosition(position = 1)

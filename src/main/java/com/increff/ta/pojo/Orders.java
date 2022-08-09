@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "assure_order")
-public class Orders {
+public class Orders extends AbstractModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

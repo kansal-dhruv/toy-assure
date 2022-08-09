@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="assure_bin_sku")
-public class BinSku {
+public class BinSku extends AbstractModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

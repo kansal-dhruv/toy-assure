@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "assure_channel_lisitng")
-public class ChannelListing {
+public class ChannelListing extends AbstractModel{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,10 +1,13 @@
 package com.increff.ta.controller;
 
+import com.increff.ta.controller.handler.ResponseHandler;
 import com.increff.ta.service.ApiException;
 import com.increff.ta.service.BinService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,15 +27,16 @@ public class BinController {
 
     @ApiOperation(value = "Used to create new bins")
     @RequestMapping(value = "api/bin/create", method = RequestMethod.POST)
-    public List<Long> createUser(@RequestParam(value = "count") Integer count) throws ApiException {
-        return binService.createBins(count);
+    public ResponseEntity<Object> createUser(@RequestParam(value = "count") Integer count) throws ApiException {
+        List<Long> responseObj = binService.createBins(count);
+        return ResponseHandler.generateResponse("Success", HttpStatus.OK, responseObj);
     }
 
     @Transactional
     @ApiOperation(value = "Add products in bins")
     @RequestMapping(value = "/api/bin/putProducts", method = RequestMethod.POST)
-    public String putProducts(@RequestParam("file") MultipartFile csvfile) throws ApiException, IOException {
+    public ResponseEntity<Object> putProducts(@RequestParam("file") MultipartFile csvfile) throws ApiException, IOException {
         binService.putProductsToBin(csvfile.getBytes());
-        return "success";
+        return ResponseHandler.successResponse();
     }
 }

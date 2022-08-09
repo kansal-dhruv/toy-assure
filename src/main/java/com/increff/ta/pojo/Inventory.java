@@ -1,12 +1,10 @@
 package com.increff.ta.pojo;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "assure_inventory")
-public class Inventory {
+public class Inventory extends AbstractModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

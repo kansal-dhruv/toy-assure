@@ -5,8 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.increff.ta.model.InfoData;
-
 @Controller
 public class UIController {
 
@@ -35,7 +33,7 @@ public class UIController {
 
 	private ModelAndView mav(String page) {
 		ModelAndView mav = new ModelAndView(page);
-		mav.addObject("info", new InfoData());
+//		mav.addObject("info", new InfoData());
 		mav.addObject("baseUrl", baseUrl);
 		return mav;
 	}

@@ -1,7 +1,6 @@
 package com.increff.ta.controller.handler;
 
 import com.increff.ta.service.ApiException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,8 +17,7 @@ public class RestResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleConflictApiException(
             RuntimeException ex, WebRequest request) {
         ex.printStackTrace();
-        return handleExceptionInternal(ex, ex.getMessage(),
-                new HttpHeaders(), HttpStatus.CONFLICT, request);
+        return ResponseHandler.generateResponse(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR,null);
     }
 
     @ExceptionHandler(value
@@ -27,7 +25,6 @@ public class RestResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleConflict(
             RuntimeException ex, WebRequest request) {
         ex.printStackTrace();
-        return handleExceptionInternal(ex, "Internal Server error",
-                new HttpHeaders(), HttpStatus.CONFLICT, request);
+        return ResponseHandler.generateResponse("Internal Server Error - Please contact system Administrator.",HttpStatus.INTERNAL_SERVER_ERROR,null);
     }
 }
