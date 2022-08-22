@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 public class InventoryDao extends AbstractDao {
 
     private final String select_by_globalSkuId = "SELECT e FROM Inventory e where e.product.globalSkuId=:globalSkuId";
+    private final String select_by_clientSkuId = "SELECT e FROM Inventory e where e.product.clientSkuId=:clientSkuId";
 
     public void insertOrUpdate(Inventory inv){em.persist(inv);}
 
@@ -19,4 +20,9 @@ public class InventoryDao extends AbstractDao {
     }
 
 
+    public Inventory findByClientSkuid(String clientSkuId) {
+        TypedQuery<Inventory> query = getQuery(select_by_clientSkuId, Inventory.class);
+        query.setParameter("clientSkuId", clientSkuId);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
 }

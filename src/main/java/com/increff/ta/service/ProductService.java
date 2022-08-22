@@ -1,5 +1,6 @@
 package com.increff.ta.service;
 
+import com.increff.ta.constants.Constants;
 import com.increff.ta.dao.ProductDao;
 import com.increff.ta.dao.UserDao;
 import com.increff.ta.enums.UserType;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Set;
@@ -27,34 +27,45 @@ public class ProductService {
     @Autowired
     private UserDao userDao;
 
-    public String addProductsFromCSV(MultipartFile csvFile, Long clientId) throws ApiException {
+    public void addProductsFromCSV(MultipartFile csvFile, Long clientId) throws ApiException {
         User user = userDao.selectById(clientId);
+        System.out.println(user.getName() + ":" + user.getType());
         if (user != null && user.getType().equals(UserType.CLIENT)) {
             List<ProductDetailCSV> productdetails = null;
             try {
                 productdetails = new CsvToBeanBuilder(new InputStreamReader(new ByteArrayInputStream(csvFile.getBytes()), "UTF8"))
                         .withType(ProductDetailCSV.class).withSkipLines(1).build().parse();
-            } catch (IOException e) {
-                throw new ApiException("Issue while processing CSV File");
+            } catch (Exception e) {
+                throw new ApiException(Constants.CODE_ERROR_PARSING_CSV_FILE, Constants.MSG_ERROR_PARSING_CSV_FILE);
             }
             Set<String> clientToClientSkuId = productdetails.stream().map((productPojo -> productPojo.getClientSkuId())).collect(Collectors.toSet());
             if (clientToClientSkuId.size() == productdetails.size()) {
                 for (ProductDetailCSV productdetail : productdetails) {
                     Product product = productDao.findByClientSkuId(productdetail.getClientSkuId());
                     if (product != null) {
-                        product = convertCSVtoPojo(productdetail, user, product.getGlobalSkuId());
+                        product = convertCSVtoPojo(product, productdetail, user, product.getGlobalSkuId());
                     } else {
-                        product = convertCSVtoPojo(productdetail, user, null);
+                        product = convertCSVtoPojo(product, productdetail, user, null);
+                        productDao.addProduct(product);
                     }
-                    productDao.addProduct(product);
                 }
-                return "success";
-            } else throw new ApiException("There Cannot be same clientSkuId for a given clientId");
-        } else throw new ApiException("Given clientId is not a client");
+            } else
+                throw new ApiException(Constants.CODE_DUPLICATE_CLIENT_SKU_ID, Constants.MSG_DUPLICATE_CLIENT_SKU_ID);
+        } else throw new ApiException(Constants.CODE_INVALID_USER, Constants.MSG_INVALID_USER);
     }
 
-    private Product convertCSVtoPojo(ProductDetailCSV productDetail, User user, Long globalSkuId) {
-        Product product = new Product();
+    public Product addProduct(Product product) {
+        return productDao.addProduct(product);
+    }
+
+    public Product getProduct(String clientSkuId) {
+        return productDao.findByClientSkuId(clientSkuId);
+    }
+
+    private Product convertCSVtoPojo(Product product, ProductDetailCSV productDetail, User user, Long globalSkuId) {
+        if (product == null) {
+            product = new Product();
+        }
         if (globalSkuId != null) {
             product.setGlobalSkuId(globalSkuId);
         }

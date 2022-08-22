@@ -11,7 +11,7 @@ public class UserDao extends AbstractDao{
 
     private final String select_by_name = "SELECT e from User e where e.name=:name";
     @Transactional
-    public void insert(User user){em.persist(user);}
+    public User insert(User user){return em.merge(user);}
 
     public User selectById(Long id){
         return em.find(User.class, id);

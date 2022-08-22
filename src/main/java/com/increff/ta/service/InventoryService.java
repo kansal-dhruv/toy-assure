@@ -18,9 +18,23 @@ public class InventoryService {
             inv = new Inventory();
             inv.setAvailableQuantity(totalQuantity);
             inv.setProduct(product);
+            inventoryDao.insertOrUpdate(inv);
         } else {
             inv.setAvailableQuantity(totalQuantity);
         }
-        inventoryDao.insertOrUpdate(inv);
+    }
+
+    public void incrementAllocatedQuantity(Product product, Long quantity){
+        Inventory inv = inventoryDao.findByGlobalSkuid(product.getGlobalSkuId());
+        inv.setAllocatedQuantity(inv.getAllocatedQuantity() + quantity);
+    }
+
+    public void incrementFulFilledQuantity(Product product, Long quantity){
+        Inventory inv = inventoryDao.findByGlobalSkuid(product.getGlobalSkuId());
+        inv.setFulfilledQuantity(inv.getFulfilledQuantity() + quantity);
+    }
+
+    public Inventory getInventoryByClientSkuId(String clientSkuId){
+        return inventoryDao.findByClientSkuid(clientSkuId);
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import javax.xml.bind.JAXBException;
+import java.net.URISyntaxException;
 
 @Api
 @RestController
@@ -43,6 +45,13 @@ public class OrderController {
     @RequestMapping(value = "/api/order/allocate", method = RequestMethod.POST)
     public ResponseEntity<Object> allocateOrder(@RequestParam("orderId") Long orderId){
         orderService.allocateOrder(orderId);
+        return ResponseHandler.successResponse();
+    }
+
+    @Transactional
+    @RequestMapping(value = "/api/order/fulfill", method = RequestMethod.POST)
+    public ResponseEntity<Object> fulfillOrder(@RequestParam("orderId") Long orderId) throws JAXBException, URISyntaxException {
+        orderService.fulfillOrder(orderId);
         return ResponseHandler.successResponse();
     }
 }

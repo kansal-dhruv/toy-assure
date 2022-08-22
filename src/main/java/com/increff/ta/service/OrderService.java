@@ -1,5 +1,6 @@
 package com.increff.ta.service;
 
+import com.increff.ta.constants.Constants;
 import com.increff.ta.dao.*;
 import com.increff.ta.enums.OrderStatus;
 import com.increff.ta.enums.UserType;
@@ -8,14 +9,15 @@ import com.increff.ta.model.OrderItemForm;
 import com.increff.ta.model.OrderUploadCSV;
 import com.increff.ta.pojo.*;
 import com.opencsv.bean.CsvToBeanBuilder;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.xml.bind.JAXBException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -47,6 +49,9 @@ public class OrderService {
 
     @Autowired
     private BinSkuDao binSkuDao;
+
+    @Autowired
+    private InvoiceService invoiceService;
 
     public void createOrderCSV(Long clientId, String channelOrderId,
                             Long customerId, MultipartFile csvFile) {
@@ -168,5 +173,16 @@ public class OrderService {
 
     private Boolean isClientAndCustomerValid(User client, User customer) {
         return client.getType().equals(UserType.CLIENT) && customer.getType().equals(UserType.CUSTOMER);
+    }
+
+    public void fulfillOrder(Long orderId) throws JAXBException, URISyntaxException {
+        Orders order = orderDao.findByOrderId(orderId);
+        if(order.getStatus() == OrderStatus.ALLOCATED){
+            List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);
+            invoiceService.generateInvoice(orderItems, order);
+            order.setStatus(OrderStatus.FULFILLED);
+        } else {
+            throw new ApiException(Constants.CODE_INVALID_ORDER_ID, Constants.MSG_INVALID_ORDER_ID);
+        }
     }
 }
