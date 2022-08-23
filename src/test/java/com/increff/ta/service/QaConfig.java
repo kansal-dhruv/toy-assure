@@ -6,11 +6,11 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 
 @Configuration
 @ComponentScan(//
-		basePackages = {"com.increff.ta"}, //
-		excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, value = { SpringConfig.class })//
+        basePackages = {"com.increff.ta"}, //
+        excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, value = {SpringConfig.class})//
 )
 @PropertySources({ //
-		@PropertySource(value = "classpath:./com/increff/ta/test.properties", ignoreResourceNotFound = true) //
+        @PropertySource(value = "classpath:./com/increff/ta/test.properties", ignoreResourceNotFound = true) //
 })
 public class QaConfig {
 

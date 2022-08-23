@@ -8,13 +8,17 @@ import javax.persistence.TypedQuery;
 @Repository
 public class ChannelDao extends AbstractDao {
 
-    private final String select_by_channel_name="SELECT e from Channel e where e.name=:channelName";
+    private final String select_by_channel_name = "SELECT e from Channel e where e.name=:channelName";
 
-    public void insertOrUpdate(Channel channel){em.persist(channel);}
+    public void insertOrUpdate(Channel channel) {
+        em.persist(channel);
+    }
 
-    public Channel findByChannelName(String channelName){
+    public Channel findByChannelName(String channelName) {
         TypedQuery<Channel> query = getQuery(select_by_channel_name, Channel.class);
-        query.setParameter("channelName",channelName);
+        query.setParameter("channelName", channelName);
         return query.getResultList().stream().findFirst().orElse(null);
-    };
+    }
+
+    ;
 }

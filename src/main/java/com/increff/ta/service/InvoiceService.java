@@ -16,8 +16,6 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +24,17 @@ import java.util.List;
 @Transactional
 public class InvoiceService {
 
+    final private FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+    final private String xslTemplateName = "xslTemplate.xsl";
     @Autowired
     private InventoryService inventoryService;
 
-    public void generateInvoice(List<OrderItem> orderItems, Orders order) throws URISyntaxException {
-        File xslFile = new File(Thread.currentThread().getContextClassLoader().getResource("xslTemplate.xsl").toURI());
+    public byte[] generateInvoice(List<OrderItem> orderItems, Orders order) throws URISyntaxException {
+        File xslFile = new File(Thread.currentThread().getContextClassLoader().getResource(xslTemplateName).toURI());
         String xmlInput = getXmlString(orderItems, order);
         try {
-            createInvoicePdf(xmlInput, xslFile);
-        } catch (Exception e){
+            return createInvoicePdf(xmlInput, xslFile);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ApiException(-14, "Issue while generating XML for orders");
         }
@@ -56,15 +56,15 @@ public class InvoiceService {
             Marshaller marshallerObj = context.createMarshaller();
             marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshallerObj.marshal(invoiceData, stringWriter);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ApiException(-14, "Issue while generating XML for orders");
         }
         return stringWriter.toString();
     }
 
-    private List<InvoiceItemData> convertOrderitemToInvoiceOrderItem(List<OrderItem> orderItems){
+    private List<InvoiceItemData> convertOrderitemToInvoiceOrderItem(List<OrderItem> orderItems) {
         List<InvoiceItemData> invoiceItemDataList = new ArrayList<InvoiceItemData>();
-        for(OrderItem orderItem:orderItems){
+        for (OrderItem orderItem : orderItems) {
             InvoiceItemData invoiceItemData = new InvoiceItemData();
             invoiceItemData.setProductName(orderItem.getProduct().getName());
             invoiceItemData.setClientSkuid(orderItem.getProduct().getClientSkuId());
@@ -74,22 +74,21 @@ public class InvoiceService {
             invoiceItemDataList.add(invoiceItemData);
             orderItem.setFullfilledQuanity(orderItem.getAllocatedQuanity());
             orderItem.setAllocatedQuanity(0L);
-            inventoryService.incrementAllocatedQuantity(orderItem.getProduct(), orderItem.getOrderedQuantity());
+            inventoryService.decrementAllocatedQuantity(orderItem.getProduct(), orderItem.getOrderedQuantity());
             inventoryService.incrementFulFilledQuantity(orderItem.getProduct(), orderItem.getOrderedQuantity());
         }
         return invoiceItemDataList;
     }
 
-    private void createInvoicePdf(String xml, File xslt) throws IOException, FOPException, TransformerException {
-        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+    private byte[] createInvoicePdf(String xml, File xslt) throws IOException, FOPException, TransformerException {
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
-        OutputStream outputStream = Files.newOutputStream(Paths.get("out.pdf"));
-        Fop fop = null;
-        fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, outputStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, outputStream);
         TransformerFactory factory = TransformerFactory.newInstance();
         Transformer transformer = factory.newTransformer(new StreamSource(xslt));
         Source src = new StreamSource(new StringReader(xml));
         Result res = new SAXResult(fop.getDefaultHandler());
         transformer.transform(src, res);
+        return outputStream.toByteArray();
     }
 }

@@ -13,19 +13,19 @@ public class UserService {
     @Autowired
     private UserDao userDao;
 
-    public User createUser(UserForm userData){
+    public User createUser(UserForm userData) {
         User user = convertFormToPojo(userData);
-        if(userDao.selectByName(user.getName()) != null){
+        if (userDao.selectByName(user.getName()) != null) {
             throw new ApiException(Constants.CODE_USERNAME_ALREADY_IN_USE, Constants.MSG_USERNAME_ALREADY_EXISTS);
         }
         return userDao.insert(user);
     }
 
-    public User getUser(Long clientId){
+    public User getUser(Long clientId) {
         return userDao.selectById(clientId);
     }
 
-    public User convertFormToPojo(UserForm userForm){
+    public User convertFormToPojo(UserForm userForm) {
         User userPojo = new User();
         userPojo.setName(userForm.getName());
         userPojo.setType(userForm.getType());

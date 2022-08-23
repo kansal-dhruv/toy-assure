@@ -5,8 +5,8 @@ import com.increff.ta.enums.UserType;
 import javax.persistence.*;
 
 @Entity
-@Table(name="assure_user")
-public class User extends AbstractModel{
+@Table(name = "assure_user")
+public class User extends AbstractModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

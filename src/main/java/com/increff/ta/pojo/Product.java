@@ -3,7 +3,7 @@ package com.increff.ta.pojo;
 import javax.persistence.*;
 
 @Entity
-@Table(name="assure_product")
+@Table(name = "assure_product")
 public class Product extends AbstractModel {
 
     @Column(unique = true)

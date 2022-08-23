@@ -3,8 +3,8 @@ package com.increff.ta.pojo;
 import javax.persistence.*;
 
 @Entity
-@Table(name="assure_bin")
-public class Bin extends AbstractModel{
+@Table(name = "assure_bin")
+public class Bin extends AbstractModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long binId;

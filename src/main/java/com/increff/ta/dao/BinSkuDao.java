@@ -22,14 +22,14 @@ public class BinSkuDao extends AbstractDao {
         return query.getResultList();
     }
 
-    public BinSku findByBinIdAndGlobalSkuId(Long binId,Long globalSkuId) {
+    public BinSku findByBinIdAndGlobalSkuId(Long binId, Long globalSkuId) {
         TypedQuery<BinSku> query = getQuery(select_by_binId_and_globalSkuId, BinSku.class);
         query.setParameter("binId", binId);
         query.setParameter("globalSkuId", globalSkuId);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 
-    public Long findTotalCountByGlobalSkuId(Long globalSkuId){
+    public Long findTotalCountByGlobalSkuId(Long globalSkuId) {
         TypedQuery<Long> query = getQuery(select_total_count_by_globalSkuId, Long.class);
         query.setParameter("globalSkuId", globalSkuId);
         return query.getResultList().stream().findFirst().orElse(null);

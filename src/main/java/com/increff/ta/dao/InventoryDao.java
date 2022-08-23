@@ -11,9 +11,11 @@ public class InventoryDao extends AbstractDao {
     private final String select_by_globalSkuId = "SELECT e FROM Inventory e where e.product.globalSkuId=:globalSkuId";
     private final String select_by_clientSkuId = "SELECT e FROM Inventory e where e.product.clientSkuId=:clientSkuId";
 
-    public void insertOrUpdate(Inventory inv){em.persist(inv);}
+    public void insertOrUpdate(Inventory inv) {
+        em.persist(inv);
+    }
 
-    public Inventory findByGlobalSkuid(Long globalSkuid){
+    public Inventory findByGlobalSkuid(Long globalSkuid) {
         TypedQuery<Inventory> query = getQuery(select_by_globalSkuId, Inventory.class);
         query.setParameter("globalSkuId", globalSkuid);
         return query.getResultList().stream().findFirst().orElse(null);

@@ -27,20 +27,20 @@ public class AbstractModel {
         return createdOn;
     }
 
-    public Date getUpdatedOn() {
-        return updatedOn;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
     public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
     }
 
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
     public void setUpdatedOn(Date updatedOn) {
         this.updatedOn = updatedOn;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     public void setVersion(Long version) {

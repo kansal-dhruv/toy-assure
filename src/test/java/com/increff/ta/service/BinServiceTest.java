@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class BinServiceTest extends AbstractUnitTest{
+public class BinServiceTest extends AbstractUnitTest {
 
     @Autowired
     BinService binService;
@@ -40,7 +40,7 @@ public class BinServiceTest extends AbstractUnitTest{
     @Autowired
     private UserService userService;
 
-    private void init(){
+    private void init() {
         UserForm userForm = new UserForm();
         userForm.setType(UserType.CUSTOMER);
         userForm.setName("customer");
@@ -51,88 +51,88 @@ public class BinServiceTest extends AbstractUnitTest{
     }
 
     @Test
-    public void createBinsWithInvalidBinCount(){
+    public void createBinsWithInvalidBinCount() {
         try {
             binService.createBins(0);
-        } catch (ApiException e){
+        } catch (ApiException e) {
             Assert.assertEquals(e.getCode(), Constants.CODE_INVALID_BIN_COUNT);
         }
     }
 
     @Test
-    public void createBinsWithValidBinCount(){
+    public void createBinsWithValidBinCount() {
         List<Long> binIds = binService.createBins(5);
-        if(binIds.size() != 5){
+        if (binIds.size() != 5) {
             Assert.fail();
         }
     }
 
     @Test
-    public void putProductsToBin(){
+    public void putProductsToBin() {
         createBinsWithValidBinCount();
         productServiceTest.addProductsAsClient();
         try {
             putProductsToBinWithFileName("addProductsToBin.csv");
-        } catch (ApiException e){
+        } catch (ApiException e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void putProductsToBinWithInvalidCSV(){
+    public void putProductsToBinWithInvalidCSV() {
         createBinsWithValidBinCount();
         productServiceTest.addProductsAsClient();
         try {
             putProductsToBinWithFileName("InvalidCSV.html");
-        } catch (ApiException e){
+        } catch (ApiException e) {
             Assert.assertEquals(e.getCode(), Constants.CODE_ERROR_PARSING_CSV_FILE);
             return;
-        } catch(Exception e){
+        } catch (Exception e) {
             Assert.fail();
         }
         Assert.fail();
     }
 
     @Test
-    public void putProductsToBinWithInvalidBinId(){
+    public void putProductsToBinWithInvalidBinId() {
         createBinsWithValidBinCount();
         productServiceTest.addProductsAsClient();
         try {
             putProductsToBinWithFileName("addProductsToBin-invalidBinID.csv");
-        } catch (ApiException e){
+        } catch (ApiException e) {
             Assert.assertEquals(e.getCode(), Constants.CODE_BIN_NOT_FOUND);
             return;
-        } catch(Exception e){
+        } catch (Exception e) {
             Assert.fail();
         }
         Assert.fail();
     }
 
     @Test
-    public void putProductsToBinWithInvalidClientSkuId(){
+    public void putProductsToBinWithInvalidClientSkuId() {
         createBinsWithValidBinCount();
         productServiceTest.addProductsAsClient();
         try {
             putProductsToBinWithFileName("addProductsToBin-invalidProductsID.csv");
-        } catch (ApiException e){
+        } catch (ApiException e) {
             Assert.assertEquals(e.getCode(), Constants.CODE_PRODUCT_NOT_FOUND);
             return;
-        } catch(Exception e){
+        } catch (Exception e) {
             Assert.fail();
         }
         Assert.fail();
     }
 
     @Test
-    public void putProductsToBinWithInvalidBinSkuMapping(){
+    public void putProductsToBinWithInvalidBinSkuMapping() {
         createBinsWithValidBinCount();
         productServiceTest.addProductsAsClient();
         try {
             putProductsToBinWithFileName("addProductsToBin-invalidBinSkuMapping.csv");
-        } catch (ApiException e){
+        } catch (ApiException e) {
             Assert.assertEquals(e.getCode(), Constants.CODE_BINID_CLIENTSKUID_SHOULD_BE_UNIQUE);
             return;
-        } catch(Exception e){
+        } catch (Exception e) {
             Assert.fail();
         }
         Assert.fail();
@@ -151,7 +151,7 @@ public class BinServiceTest extends AbstractUnitTest{
 //        putProductsToBinWithFileName("addProductsToBin.csv");
 //    }
 
-    private void putProductsToBinWithFileName(String fileName){
+    private void putProductsToBinWithFileName(String fileName) {
         byte[] csvBytes = null;
         try {
             csvBytes = Files.readAllBytes(Paths.get(FileUtils.getFileFromResources(fileName).toURI()));
@@ -160,7 +160,7 @@ public class BinServiceTest extends AbstractUnitTest{
         }
         try {
             binService.putProductsToBin(csvBytes);
-        } catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }

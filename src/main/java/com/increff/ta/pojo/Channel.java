@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "assure_channel")
-public class Channel extends AbstractModel{
+public class Channel extends AbstractModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

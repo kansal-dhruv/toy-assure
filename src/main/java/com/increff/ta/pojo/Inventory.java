@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "assure_inventory")
-public class Inventory extends AbstractModel{
+public class Inventory extends AbstractModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,11 +13,11 @@ public class Inventory extends AbstractModel{
     @JoinColumn(name = "globalSkuId")
     private Product product;
 
-    private Long availableQuantity=0L;
+    private Long availableQuantity = 0L;
 
-    private Long allocatedQuantity=0L;
+    private Long allocatedQuantity = 0L;
 
-    private Long fulfilledQuantity=0L;
+    private Long fulfilledQuantity = 0L;
 
     public Long getId() {
         return id;

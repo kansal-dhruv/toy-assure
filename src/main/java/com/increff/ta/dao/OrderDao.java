@@ -14,13 +14,13 @@ public class OrderDao extends AbstractDao {
         return em.merge(orders);
     }
 
-    public Orders findByChannelOrderId(String channelOrderId){
+    public Orders findByChannelOrderId(String channelOrderId) {
         TypedQuery<Orders> query = getQuery(find_by_channelOrderId, Orders.class);
         query.setParameter("channelOrderId", channelOrderId);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 
-    public Orders findByOrderId(Long orderId){
+    public Orders findByOrderId(Long orderId) {
         return em.find(Orders.class, orderId);
     }
 }

@@ -14,11 +14,11 @@ public class BinDao {
     private EntityManager em;
 
     @Transactional
-    public Bin create(Bin bin){
+    public Bin create(Bin bin) {
         return em.merge(bin);
     }
 
-    public Bin findById(Long binId){
-        return em.find(Bin.class,binId);
+    public Bin findById(Long binId) {
+        return em.find(Bin.class, binId);
     }
 }

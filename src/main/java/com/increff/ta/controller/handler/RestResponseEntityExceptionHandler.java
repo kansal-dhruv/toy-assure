@@ -15,9 +15,9 @@ public class RestResponseEntityExceptionHandler
     @ExceptionHandler(value
             = {ApiException.class})
     protected ResponseEntity<Object> handleConflictApiException(
-            RuntimeException ex, WebRequest request) {
+            ApiException ex, WebRequest request) {
         ex.printStackTrace();
-        return ResponseHandler.generateResponse(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR,null);
+        return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, ex.getDescription());
     }
 
     @ExceptionHandler(value
@@ -25,6 +25,6 @@ public class RestResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleConflict(
             RuntimeException ex, WebRequest request) {
         ex.printStackTrace();
-        return ResponseHandler.generateResponse("Internal Server Error - Please contact system Administrator.",HttpStatus.INTERNAL_SERVER_ERROR,null);
+        return ResponseHandler.generateResponse("Internal Server Error - Please contact system Administrator.", HttpStatus.INTERNAL_SERVER_ERROR, null);
     }
 }

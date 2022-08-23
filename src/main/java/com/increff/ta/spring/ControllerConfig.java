@@ -28,68 +28,68 @@ import java.util.List;
 @EnableSwagger2
 public class ControllerConfig extends WebMvcConfigurerAdapter {
 
-	public static final String PACKAGE_CONTROLLER = "com.increff.ta.controller";
+    public static final String PACKAGE_CONTROLLER = "com.increff.ta.controller";
 
 
-	private ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
-	public void setApplicationContext(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-	}
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2)//
-				.useDefaultResponseMessages(false)//
-				.select().apis(RequestHandlerSelectors.basePackage(PACKAGE_CONTROLLER))//
-				.paths(PathSelectors.regex("/api/.*"))//
-				.build();
-	}
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)//
+                .useDefaultResponseMessages(false)//
+                .select().apis(RequestHandlerSelectors.basePackage(PACKAGE_CONTROLLER))//
+                .paths(PathSelectors.regex("/api/.*"))//
+                .build();
+    }
 
-	// Add configuration for Swagger
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
-	}
+    // Add configuration for Swagger
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+    }
 
-	@Override
-	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-		configurer.enable();
-	}
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
 
-	@Bean
-	public SpringTemplateEngine templateEngine() {
-		SpringTemplateEngine engine = new SpringTemplateEngine();
-		engine.setEnableSpringELCompiler(true);
-		engine.setTemplateResolver(templateResolver());
-		return engine;
-	}
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine engine = new SpringTemplateEngine();
+        engine.setEnableSpringELCompiler(true);
+        engine.setTemplateResolver(templateResolver());
+        return engine;
+    }
 
-	@Bean
-	public ThymeleafViewResolver viewResolver() {
-		ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-		resolver.setTemplateEngine(templateEngine());
-		resolver.setCharacterEncoding("UTF-8");
-		return resolver;
-	}
-	
-	@Bean
-	public ITemplateResolver templateResolver() {
-		SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-		resolver.setApplicationContext(applicationContext);
-		resolver.setPrefix("/html/");
-		resolver.setTemplateMode(TemplateMode.HTML);
-		return resolver;
-	}
+    @Bean
+    public ThymeleafViewResolver viewResolver() {
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+        resolver.setTemplateEngine(templateEngine());
+        resolver.setCharacterEncoding("UTF-8");
+        return resolver;
+    }
 
-	@Override
-	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		converter.setObjectMapper(new ObjectMapper());
-		converters.add(converter);
-		super.configureMessageConverters(converters);
-	}
+    @Bean
+    public ITemplateResolver templateResolver() {
+        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setApplicationContext(applicationContext);
+        resolver.setPrefix("/html/");
+        resolver.setTemplateMode(TemplateMode.HTML);
+        return resolver;
+    }
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setObjectMapper(new ObjectMapper());
+        converters.add(converter);
+        super.configureMessageConverters(converters);
+    }
 
 }

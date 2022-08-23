@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Api
@@ -35,7 +37,7 @@ public class OrderController {
     @Transactional
     @ApiOperation("This API is used to create order from other Channels")
     @RequestMapping(value = "/api/order/channel/create", method = RequestMethod.POST)
-    public ResponseEntity<Object> orderUpload(@RequestBody OrderForm orderForm){
+    public ResponseEntity<Object> orderUpload(@RequestBody OrderForm orderForm) {
         orderService.createOrder(orderForm);
         return ResponseHandler.successResponse();
     }
@@ -43,15 +45,14 @@ public class OrderController {
     @Transactional
     @ApiOperation("This API is used to allocate quantity to orders for CREATED orders")
     @RequestMapping(value = "/api/order/allocate", method = RequestMethod.POST)
-    public ResponseEntity<Object> allocateOrder(@RequestParam("orderId") Long orderId){
+    public ResponseEntity<Object> allocateOrder(@RequestParam("orderId") Long orderId) {
         orderService.allocateOrder(orderId);
         return ResponseHandler.successResponse();
     }
 
     @Transactional
     @RequestMapping(value = "/api/order/fulfill", method = RequestMethod.POST)
-    public ResponseEntity<Object> fulfillOrder(@RequestParam("orderId") Long orderId) throws JAXBException, URISyntaxException {
-        orderService.fulfillOrder(orderId);
-        return ResponseHandler.successResponse();
+    public void fulfillOrder(@RequestParam("orderId") Long orderId, HttpServletResponse response) throws JAXBException, URISyntaxException, IOException {
+        orderService.fulfillOrder(orderId, response);
     }
 }

@@ -19,7 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Component
-public class ProductServiceTest extends AbstractUnitTest{
+public class ProductServiceTest extends AbstractUnitTest {
 
     @Autowired
     ProductService productService;
@@ -43,7 +43,7 @@ public class ProductServiceTest extends AbstractUnitTest{
     }
 
     @Test
-    public void addProductsAsCustomer(){
+    public void addProductsAsCustomer() {
         init();
         byte[] csvBytes = null;
         try {
@@ -54,7 +54,7 @@ public class ProductServiceTest extends AbstractUnitTest{
         MultipartFile csvFile = new MockMultipartFile("addProducts.csv", csvBytes);
         try {
             productService.addProductsFromCSV(csvFile, customerId);
-        } catch(ApiException e){
+        } catch (ApiException e) {
             Assert.assertEquals(e.getCode(), Constants.CODE_INVALID_USER);
             return;
         }
@@ -62,7 +62,7 @@ public class ProductServiceTest extends AbstractUnitTest{
     }
 
     @Test
-    public void addProductsAsClient(){
+    public void addProductsAsClient() {
         init();
         byte[] csvBytes = null;
         try {
@@ -75,7 +75,7 @@ public class ProductServiceTest extends AbstractUnitTest{
     }
 
     @Test
-    public void addProductsWithSameSkuId(){
+    public void addProductsWithSameSkuId() {
         init();
         byte[] csvBytes = null;
         try {
@@ -86,15 +86,15 @@ public class ProductServiceTest extends AbstractUnitTest{
         MultipartFile csvFile = new MockMultipartFile("addProducts-sameSkuId.csv", csvBytes);
         try {
             productService.addProductsFromCSV(csvFile, clientId);
-        } catch(ApiException e){
-            Assert.assertEquals(e.getCode(),Constants.CODE_DUPLICATE_CLIENT_SKU_ID);
+        } catch (ApiException e) {
+            Assert.assertEquals(e.getCode(), Constants.CODE_DUPLICATE_CLIENT_SKU_ID);
             return;
         }
         Assert.fail();
     }
 
     @Test(expected = ApiException.class)
-    public void addProductWithoutMandatoryFields(){
+    public void addProductWithoutMandatoryFields() {
         init();
         byte[] csvBytes = null;
         try {
@@ -107,7 +107,7 @@ public class ProductServiceTest extends AbstractUnitTest{
     }
 
     @Test
-    public void addProductsAsClientWithUpdate(){
+    public void addProductsAsClientWithUpdate() {
         init();
         String sampleSkuId = "sku-2";
         Product sampleProduct = new Product();
