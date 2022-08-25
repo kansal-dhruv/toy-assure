@@ -1,10 +1,20 @@
 package com.increff.ta.utils;
 
-import java.net.URL;
+import org.junit.Assert;
+import org.springframework.mock.web.MockMultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class FileUtils {
-    public static URL getFileFromResources(String path) {
+    public static MockMultipartFile getFileFromResources(String path) {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        return classloader.getResource(path);
+        try {
+            return new MockMultipartFile(path, Files.readAllBytes(Paths.get(classloader.getResource(path).toURI())));
+        } catch (Exception e){
+            e.printStackTrace();
+            Assert.fail();
+        }
+        return null;
     }
 }

@@ -14,8 +14,8 @@ public class ChannelListingDao extends AbstractDao {
     private final String select_by_channelSku_channelId_clientId =
             "SELECT e from ChannelListing e where e.channel.id=:channelId and e.channelSkuId=:channelSkuId and e.user.id=:clientId";
 
-    public void saveOrUpdate(ChannelListing channelListing) {
-        em.persist(channelListing);
+    public ChannelListing saveOrUpdate(ChannelListing channelListing) {
+        return em.merge(channelListing);
     }
 
     public ChannelListing findByChannelSkuIdAndChannelIdAndGlobalSkuId(Long channelId, String channelSkuId, Long globalSkuId) {

@@ -14,6 +14,7 @@ public class Constants {
     public static Integer CODE_INTERNAL_CHANNEL_NOT_FOUND = -12;
     public static Integer CODE_DUPLICATE_CHANNEL_ORDER_ID = -13;
     public static Integer CODE_INAVLID_CHANNEL = -14;
+    public static Integer CODE_INVALID_CHANNEL_LISTING_ID = -15;
 
 
     public static String MSG_USERNAME_ALREADY_EXISTS = "Input client name already exists";
@@ -29,4 +30,5 @@ public class Constants {
     public static String MSG_INTERNAL_CHANNEL_NOT_FOUND = "Internal channel is not present";
     public static String MSG_DUPLICATE_CHANNEL_ORDER_ID = "Channel order ID must be unique";
     public static String MSG_INVALID_CHANNEL = "Invalid channel name";
+    public static String MSG_INVALID_CHANNEL_LISTING_ID = "Invalid channel listing";
 }

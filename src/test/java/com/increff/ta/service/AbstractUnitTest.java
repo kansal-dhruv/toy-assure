@@ -14,9 +14,4 @@ import javax.transaction.Transactional;
 @Transactional
 public abstract class AbstractUnitTest {
 
-
-    protected Long customerId;
-
-    protected Long clientId;
-
 }

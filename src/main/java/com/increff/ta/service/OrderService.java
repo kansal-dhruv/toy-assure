@@ -67,7 +67,7 @@ public class OrderService {
         try {
             orderUploadDetails = new CsvToBeanBuilder(new InputStreamReader(new ByteArrayInputStream(csvFile.getBytes()), "UTF8"))
                     .withType(OrderUploadCSV.class).withSkipLines(1).build().parse();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ApiException(Constants.CODE_ERROR_PARSING_CSV_FILE, Constants.MSG_ERROR_PARSING_CSV_FILE);
         }
         Set<String> clientSkuIds = orderUploadDetails.stream().map((OrderUploadCSV orderUploadDetail) -> orderUploadDetail.getClientSkuId()).collect(Collectors.toSet());
@@ -131,7 +131,8 @@ public class OrderService {
         for (OrderItemForm item : orderForm.getOrderItemList()) {
             ChannelListing channelListing = channelListingDao.findByChannelIdAndChannelSkuidAndClientId(client.getId(), channel.getId(), item.getChannelSkuId());
             if (channelListing == null)
-                throw new ApiException("Channel Listing not found for channelSkuId and clientId: " + item.getChannelSkuId() + ", " + channel.getId());
+                throw new ApiException(Constants.CODE_INVALID_CHANNEL_LISTING_ID, Constants.MSG_INVALID_CHANNEL_LISTING_ID,
+                        "Channel Listing not found for channelSkuId and clientId: " + item.getChannelSkuId() + ", " + channel.getId());
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(orders);
             orderItem.setOrderedQuantity(item.getQuantity());
@@ -143,7 +144,7 @@ public class OrderService {
     public void allocateOrder(Long orderId) {
         Orders order = orderDao.findByOrderId(orderId);
         boolean areAllOrderItemsAllocated = true;
-        if (order.getStatus().equals(OrderStatus.CREATED)) {
+        if (order!=null && order.getStatus().equals(OrderStatus.CREATED)) {
             List<OrderItem> orderItemList = orderItemDao.findByOrderId(orderId);
             for (OrderItem orderItem : orderItemList) {
                 Inventory inv = inventoryDao.findByGlobalSkuid(orderItem.getProduct().getGlobalSkuId());
@@ -188,11 +189,13 @@ public class OrderService {
 
     public void fulfillOrder(Long orderId, HttpServletResponse response) throws JAXBException, URISyntaxException, IOException {
         Orders order = orderDao.findByOrderId(orderId);
-        if (order.getStatus() == OrderStatus.ALLOCATED) {
+        if (order!=null && order.getStatus() == OrderStatus.ALLOCATED) {
+            String fileName = "Invoice_" + orderId;
             List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);
             byte[] invoiceBytes = invoiceService.generateInvoice(orderItems, order);
             order.setStatus(OrderStatus.FULFILLED);
             response.setContentType("application/pdf");
+            response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
             response.setContentLengthLong(invoiceBytes.length);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             baos.write(invoiceBytes);

@@ -21,44 +21,6 @@
         <fo:flow flow-name="xsl-region-body" font-size="8pt">
           <fo:block space-after="1cm"></fo:block>
 
-          <fo:table>
-            <fo:table-column column-width="8.5cm"/>
-            <fo:table-column column-width="8.5cm"/>
-
-            <fo:table-body>
-              <fo:table-row>
-                <fo:table-cell text-align="left">
-                  <fo:block>
-                    <xsl:value-of select="recipient-company-name"/>
-                  </fo:block>
-                  <xsl:if test="recipient-attn">
-                    <fo:block>
-                      <xsl:value-of select="recipient-attn"/>
-                    </fo:block>
-                  </xsl:if>
-                  <fo:block>
-                    <xsl:value-of select="recipient-address-street"/>
-                  </fo:block>
-                  <fo:block><xsl:value-of select="recipient-address-postal-code"/>,
-                    <xsl:value-of select="recipient-address-city"/>
-                  </fo:block>
-                </fo:table-cell>
-                <fo:table-cell text-align="right">
-                  <fo:block>
-                    <xsl:value-of select="creditor-company-name"/>
-                  </fo:block>
-                  <fo:block>
-                    <xsl:value-of select="creditor-address-street"/>
-                  </fo:block>
-                  <fo:block><xsl:value-of select="creditor-address-postal-code"/>,
-                    <xsl:value-of select="creditor-address-city"/>
-                  </fo:block>
-                </fo:table-cell>
-              </fo:table-row>
-            </fo:table-body>
-
-          </fo:table>
-
           <fo:block space-before="2cm" space-after="2cm" text-align="center" font-size="20pt" font-weight="bold">
             INVOICE
           </fo:block>
@@ -134,16 +96,16 @@
                   </fo:table-cell>
                   <fo:table-cell text-align="center" padding-bottom="2px" padding-top="2px">
                     <fo:block>
-                      <xsl:value-of select="format-number(quantity, '###,###.00')"/>
+                      <xsl:value-of select="format-number(quantity, '###,###')"/>
                     </fo:block>
                   </fo:table-cell>
                   <fo:table-cell text-align="center" padding-bottom="2px" padding-top="2px">
                     <fo:block>
-                      <xsl:value-of select="format-number(selling-price-per-unit, '###,###.00')"/>
+                      \u20B9<xsl:value-of select="format-number(selling-price-per-unit, '###,###.00')"/>
                     </fo:block>
                   </fo:table-cell>
                   <fo:table-cell text-align="center" padding-bottom="2px" padding-top="2px">
-                    <fo:block><xsl:value-of select="format-number(amount, '###.00')"/>
+                    \u20B9<fo:block><xsl:value-of select="format-number(amount, '###,###.00')"/>
                     </fo:block>
                   </fo:table-cell>
                 </fo:table-row>
@@ -152,19 +114,15 @@
           </fo:table>
           <fo:block space-after="1cm"></fo:block>
           <fo:table>
+            <fo:table-column column-width="4cm"/>
             <fo:table-column column-width="9cm"/>
-            <fo:table-column column-width="4cm"/>
-            <fo:table-column column-width="4cm"/>
             <fo:table-body>
               <fo:table-row>
-                <fo:table-cell>
-                  <fo:block></fo:block>
-                </fo:table-cell>
                 <fo:table-cell text-align="center" padding-bottom="2px" padding-top="2px">
                   <fo:block font-weight="bold">Sub Total: </fo:block>
                 </fo:table-cell>
                 <fo:table-cell text-align="center" padding-bottom="2px" padding-top="2px">
-                  <fo:block><xsl:value-of select="format-number(invoice-total, '###,###.00')"/>
+                  <fo:block>\u20B9<xsl:value-of select="format-number(invoice-total, '###,###.00')"/>
                   </fo:block>
                 </fo:table-cell>
               </fo:table-row>

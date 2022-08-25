@@ -37,7 +37,7 @@ public class BinSkuDao extends AbstractDao {
     }
 
     @Transactional
-    public void insertOrUpdate(BinSku binSku) {
-        em.merge(binSku);
+    public BinSku insertOrUpdate(BinSku binSku) {
+        return em.merge(binSku);
     }
 }

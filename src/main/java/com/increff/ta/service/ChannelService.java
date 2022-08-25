@@ -5,6 +5,7 @@ import com.increff.ta.dao.ChannelDao;
 import com.increff.ta.dao.ChannelListingDao;
 import com.increff.ta.dao.ProductDao;
 import com.increff.ta.dao.UserDao;
+import com.increff.ta.enums.UserType;
 import com.increff.ta.model.ChannelListingCSV;
 import com.increff.ta.pojo.Channel;
 import com.increff.ta.pojo.ChannelListing;
@@ -53,6 +54,14 @@ public class ChannelService {
         }
         User client = userDao.selectByName(clientName);
         Channel channel = channelDao.findByChannelName(channelName);
+        if(client == null || client.getType() != UserType.CLIENT){
+            throw new ApiException(Constants.CODE_INVALID_USER, Constants.MSG_INVALID_USER,
+                    "Client with name: " + clientName + "doesn't exist");
+        }
+        if(channel == null){
+            throw new ApiException(Constants.CODE_INAVLID_CHANNEL, Constants.MSG_INVALID_CHANNEL,
+                    "Channel with name: " + channelName + "doesn't exist");
+        }
         for (ChannelListingCSV channelListingDetail : channelListingDetails) {
             Product product = productDao.findByClientSkuId(channelListingDetail.getClientSkuId());
             if (product == null) {
