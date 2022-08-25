@@ -3,6 +3,7 @@ package com.increff.ta.pojo;
 import com.increff.ta.enums.ChannelInvoiceType;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "assure_channel")
@@ -11,6 +12,7 @@ public class Channel extends AbstractModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String name;
 
     @Enumerated(value = EnumType.STRING)

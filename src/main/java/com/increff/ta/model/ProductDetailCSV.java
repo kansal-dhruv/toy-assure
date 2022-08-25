@@ -13,10 +13,10 @@ public class ProductDetailCSV {
     @CsvBindByPosition(position = 2, required = true)
     protected String brandId;
 
-    @CsvBindByPosition(position = 3)
+    @CsvBindByPosition(position = 3, required = true)
     protected Double mrp;
 
-    @CsvBindByPosition(position = 4)
+    @CsvBindByPosition(position = 4, required = true)
     protected String description;
 
     public String getClientSkuId() {

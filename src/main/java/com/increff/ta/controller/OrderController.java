@@ -7,17 +7,21 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Api
 @RestController
+@Validated
 public class OrderController {
 
     @Autowired
@@ -26,10 +30,10 @@ public class OrderController {
     @Transactional
     @ApiOperation("This API is used to create orders from UI")
     @RequestMapping(value = "/api/order/create", method = RequestMethod.POST)
-    public ResponseEntity<Object> orderUpload(@RequestParam("clientId") Long clientId,
-                                              @RequestParam("channelOrderId") String channelOrderId,
-                                              @RequestParam("customerId") Long customerId,
-                                              @RequestParam("csvFile") MultipartFile csvFile) {
+    public ResponseEntity<Object> orderUpload(@RequestParam("clientId") @NotNull(message = "Client Id cannot by null") Long clientId,
+                                              @RequestParam("channelOrderId") @NotBlank(message = "Channel Order ID cannot by blank") String channelOrderId,
+                                              @RequestParam("customerId") @NotNull(message = "Customer ID cannot be null") Long customerId,
+                                              @RequestParam("csvFile") @NotNull(message = "CSV File cannot be null") MultipartFile csvFile) {
         orderService.createOrderCSV(clientId, channelOrderId, customerId, csvFile);
         return ResponseHandler.successResponse();
     }
