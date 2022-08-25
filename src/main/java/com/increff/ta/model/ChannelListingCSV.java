@@ -4,10 +4,10 @@ import com.opencsv.bean.CsvBindByPosition;
 
 public class ChannelListingCSV {
 
-    @CsvBindByPosition(position = 0)
+    @CsvBindByPosition(position = 0, required = true)
     private String channelSkuId;
 
-    @CsvBindByPosition(position = 1)
+    @CsvBindByPosition(position = 1, required = true)
     private String clientSkuId;
 
     public String getChannelSkuId() {

@@ -21,10 +21,6 @@ public class UserService {
         return userDao.insert(user);
     }
 
-    public User getUser(Long clientId) {
-        return userDao.selectById(clientId);
-    }
-
     public User convertFormToPojo(UserForm userForm) {
         User userPojo = new User();
         userPojo.setName(userForm.getName());

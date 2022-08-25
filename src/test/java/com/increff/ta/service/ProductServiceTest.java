@@ -2,59 +2,66 @@ package com.increff.ta.service;
 
 import com.increff.ta.constants.Constants;
 import com.increff.ta.dao.ProductDao;
-import com.increff.ta.enums.UserType;
-import com.increff.ta.model.UserForm;
-import com.increff.ta.pojo.Product;
+import com.increff.ta.dao.UserDao;
 import com.increff.ta.utils.FileUtils;
+import com.increff.ta.utils.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import static org.mockito.Matchers.*;
 
-@Component
-public class ProductServiceTest extends AbstractUnitTest {
+@RunWith(MockitoJUnitRunner.class)
+public class ProductServiceTest extends AbstractUnitTest{
 
-    @Autowired
-    ProductService productService;
-
-    @Autowired
+    @Mock
     ProductDao productDao;
 
-    @Autowired
-    private UserService userService;
+    @Mock
+    UserDao userDao;
 
-    private void init() {
-        UserForm userForm = new UserForm();
-        userForm.setType(UserType.CUSTOMER);
-        userForm.setName("customer");
-        this.customerId = userService.createUser(userForm).getId();
+    @InjectMocks
+    ProductService productService;
 
-        userForm.setType(UserType.CLIENT);
-        userForm.setName("client");
-        this.clientId = userService.createUser(userForm).getId();
-
+    @Test
+    public void addProducts(){
+        Mockito.when(userDao.selectById(anyLong())).thenReturn(TestUtils.getClientUser());
+        Mockito.when(productDao.findByClientSkuId(anyString())).thenReturn(null);
+        Mockito.when(productDao.addProduct(any())).thenReturn(TestUtils.getProduct());
+        MockMultipartFile csvFile = null;
+        csvFile = FileUtils.getFileFromResources("addProducts.csv");
+        productService.addProductsFromCSV(csvFile, 1L);
     }
 
     @Test
-    public void addProductsAsCustomer() {
-        init();
-        byte[] csvBytes = null;
+    public void addProductsInvalidCSV(){
+        Mockito.when(userDao.selectById(anyLong())).thenReturn(TestUtils.getClientUser());
+        Mockito.when(productDao.findByClientSkuId(anyString())).thenReturn(null);
+        Mockito.when(productDao.addProduct(any())).thenReturn(TestUtils.getProduct());
+        MockMultipartFile csvFile = null;
+        csvFile = FileUtils.getFileFromResources("invalidCSV.html");
         try {
-            csvBytes = Files.readAllBytes(Paths.get(FileUtils.getFileFromResources("addProducts.csv").toURI()));
-        } catch (IOException | URISyntaxException e) {
-            Assert.fail();
+            productService.addProductsFromCSV(csvFile, 1L);
+        } catch (ApiException e){
+            Assert.assertEquals(e.getCode(), Constants.CODE_ERROR_PARSING_CSV_FILE);
         }
-        MultipartFile csvFile = new MockMultipartFile("addProducts.csv", csvBytes);
+    }
+
+    @Test
+    public void addProductsInvalidUser(){
+        Mockito.when(userDao.selectById(anyLong())).thenReturn(TestUtils.getCustomerUser());
+        Mockito.when(productDao.findByClientSkuId(anyString())).thenReturn(null);
+        Mockito.when(productDao.addProduct(any())).thenReturn(TestUtils.getProduct());
+        MockMultipartFile csvFile = null;
+        csvFile = FileUtils.getFileFromResources("addProducts.csv");
         try {
-            productService.addProductsFromCSV(csvFile, customerId);
-        } catch (ApiException e) {
+            productService.addProductsFromCSV(csvFile, 1L);
+        } catch(ApiException e){
             Assert.assertEquals(e.getCode(), Constants.CODE_INVALID_USER);
             return;
         }
@@ -62,73 +69,18 @@ public class ProductServiceTest extends AbstractUnitTest {
     }
 
     @Test
-    public void addProductsAsClient() {
-        init();
-        byte[] csvBytes = null;
+    public void addProductsDuplicateProduct(){
+        Mockito.when(userDao.selectById(anyLong())).thenReturn(TestUtils.getClientUser());
+        Mockito.when(productDao.findByClientSkuId(anyString())).thenReturn(TestUtils.getProduct());
+        Mockito.when(productDao.addProduct(any())).thenReturn(TestUtils.getProduct());
+        MockMultipartFile csvFile = null;
+        csvFile = FileUtils.getFileFromResources("addProducts-sameSkuId.csv");
         try {
-            csvBytes = Files.readAllBytes(Paths.get(FileUtils.getFileFromResources("addProducts.csv").toURI()));
-        } catch (IOException | URISyntaxException e) {
-            Assert.fail();
-        }
-        MultipartFile csvFile = new MockMultipartFile("addProducts.csv", csvBytes);
-        productService.addProductsFromCSV(csvFile, clientId);
-    }
-
-    @Test
-    public void addProductsWithSameSkuId() {
-        init();
-        byte[] csvBytes = null;
-        try {
-            csvBytes = Files.readAllBytes(Paths.get(FileUtils.getFileFromResources("addProducts-sameSkuId.csv").toURI()));
-        } catch (IOException | URISyntaxException e) {
-            Assert.fail();
-        }
-        MultipartFile csvFile = new MockMultipartFile("addProducts-sameSkuId.csv", csvBytes);
-        try {
-            productService.addProductsFromCSV(csvFile, clientId);
-        } catch (ApiException e) {
+            productService.addProductsFromCSV(csvFile, 1L);
+        } catch(ApiException e){
             Assert.assertEquals(e.getCode(), Constants.CODE_DUPLICATE_CLIENT_SKU_ID);
             return;
         }
         Assert.fail();
-    }
-
-    @Test(expected = ApiException.class)
-    public void addProductWithoutMandatoryFields() {
-        init();
-        byte[] csvBytes = null;
-        try {
-            csvBytes = Files.readAllBytes(Paths.get(FileUtils.getFileFromResources("InvalidCSV.html").toURI()));
-        } catch (IOException | URISyntaxException e) {
-            Assert.fail();
-        }
-        MultipartFile csvFile = new MockMultipartFile("addProducts-withoutClientSkuID.csv", csvBytes);
-        productService.addProductsFromCSV(csvFile, clientId);
-    }
-
-    @Test
-    public void addProductsAsClientWithUpdate() {
-        init();
-        String sampleSkuId = "sku-2";
-        Product sampleProduct = new Product();
-        sampleProduct.setClient(userService.getUser(clientId));
-        sampleProduct.setName("Name Before");
-        sampleProduct.setClientSkuId(sampleSkuId);
-        sampleProduct.setMrp(200D);
-        sampleProduct.setBrandId("123");
-        sampleProduct.setDescription("Description Before");
-        sampleProduct = productService.addProduct(sampleProduct);
-        productDao.detach(sampleProduct);
-
-        byte[] csvBytes = null;
-        try {
-            csvBytes = Files.readAllBytes(Paths.get(FileUtils.getFileFromResources("addProducts.csv").toURI()));
-        } catch (IOException | URISyntaxException e) {
-            Assert.fail();
-        }
-        MultipartFile csvFile = new MockMultipartFile("addProducts.csv", csvBytes);
-        productService.addProductsFromCSV(csvFile, clientId);
-        Product updatedProduct = productService.getProduct(sampleSkuId);
-        Assert.assertNotEquals(sampleProduct, updatedProduct);
     }
 }

@@ -4,13 +4,13 @@ import com.opencsv.bean.CsvBindByPosition;
 
 public class BinClientSkuCSV {
 
-    @CsvBindByPosition(position = 0)
+    @CsvBindByPosition(position = 0, required = true)
     private Long binId;
 
-    @CsvBindByPosition(position = 1)
+    @CsvBindByPosition(position = 1, required = true)
     private String clientSkuId;
 
-    @CsvBindByPosition(position = 2)
+    @CsvBindByPosition(position = 2, required = true)
     private Long quantity;
 
     public Long getBinId() {

@@ -22,6 +22,12 @@ public class ResponseHandler {
         return new ResponseEntity<Object>(map, status);
     }
 
+    public static ResponseEntity<Object> generateResponse(Object response, HttpStatus status) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("data", response);
+        return new ResponseEntity<Object>(map, status);
+    }
+
     public static ResponseEntity<Object> successResponse() {
         return generateResponse("Success", HttpStatus.OK);
     }

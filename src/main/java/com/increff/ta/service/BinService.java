@@ -35,7 +35,7 @@ public class BinService {
     private InventoryService inventoryService;
 
     public List<Long> createBins(Integer count) throws ApiException {
-        if (count == null || count == 0) {
+        if (count == null || count <= 0) {
             throw new ApiException(Constants.CODE_INVALID_BIN_COUNT, Constants.MSG_INVALID_BIN_COUNT);
         }
         List<Long> binIds = new ArrayList<Long>();

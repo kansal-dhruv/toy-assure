@@ -2,8 +2,15 @@ package com.increff.ta.model;
 
 import com.increff.ta.enums.UserType;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class UserForm {
+
+    @NotBlank
     private String name;
+
+    @NotNull
     private UserType type;
 
     public String getName() {

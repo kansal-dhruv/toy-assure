@@ -10,8 +10,8 @@ public class ChannelDao extends AbstractDao {
 
     private final String select_by_channel_name = "SELECT e from Channel e where e.name=:channelName";
 
-    public void insertOrUpdate(Channel channel) {
-        em.persist(channel);
+    public Channel insertOrUpdate(Channel channel) {
+        return em.merge(channel);
     }
 
     public Channel findByChannelName(String channelName) {

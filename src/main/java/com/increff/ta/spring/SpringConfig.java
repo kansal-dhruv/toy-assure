@@ -1,6 +1,7 @@
 package com.increff.ta.spring;
 
 import org.springframework.context.annotation.*;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
@@ -19,6 +20,12 @@ public class SpringConfig {
         cmr.setMaxUploadSizePerFile(maxUploadSizeInMb); //bytes
         return cmr;
 
+    }
+
+
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor(){
+        return new MethodValidationPostProcessor();
     }
 
 }

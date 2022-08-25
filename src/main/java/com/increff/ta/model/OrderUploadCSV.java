@@ -4,13 +4,13 @@ import com.opencsv.bean.CsvBindByPosition;
 
 public class OrderUploadCSV {
 
-    @CsvBindByPosition(position = 0)
+    @CsvBindByPosition(position = 0, required = true)
     private String clientSkuId;
 
-    @CsvBindByPosition(position = 1)
+    @CsvBindByPosition(position = 1, required = true)
     private Long orderedQuantity;
 
-    @CsvBindByPosition(position = 2)
+    @CsvBindByPosition(position = 2, required = true)
     private Double sellingPricePerUnit;
 
     public String getClientSkuId() {
