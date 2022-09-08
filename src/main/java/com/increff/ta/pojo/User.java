@@ -5,7 +5,7 @@ import com.increff.ta.enums.UserType;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "assure_user")
+@Table(name = "assure_user", uniqueConstraints = {@UniqueConstraint(columnNames = {"name","type"})})
 public class User extends AbstractModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

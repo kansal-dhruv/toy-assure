@@ -15,8 +15,7 @@ public class ProductDao extends AbstractDao {
 
     @Transactional
     public Product addProduct(Product product) {
-        em.persist(product);
-        return product;
+        return em.merge(product);
     }
 
     public Product findByClientSkuId(String clientSkuId) {
@@ -27,7 +26,7 @@ public class ProductDao extends AbstractDao {
 
     public Product findByGlobalSkuid(Long globalSkuid) {
         TypedQuery<Product> query = getQuery(select_by_globalSkuId, Product.class);
-        query.setParameter("globalSkuid", globalSkuid);
+        query.setParameter("globalSkuId", globalSkuid);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 }

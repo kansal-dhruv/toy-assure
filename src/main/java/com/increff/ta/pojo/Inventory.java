@@ -9,9 +9,7 @@ public class Inventory extends AbstractModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "globalSkuId")
-    private Product product;
+    private Long globalSkuId;
 
     private Long availableQuantity = 0L;
 
@@ -27,12 +25,12 @@ public class Inventory extends AbstractModel {
         this.id = id;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getGlobalSkuId() {
+        return globalSkuId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setGlobalSkuId(Long globalSkuId) {
+        this.globalSkuId = globalSkuId;
     }
 
     public Long getAvailableQuantity() {

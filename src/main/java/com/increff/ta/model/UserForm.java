@@ -10,7 +10,7 @@ public class UserForm {
     @NotBlank
     private String name;
 
-    @NotNull
+    @NotNull(message = "can be either CLIENT/CUSTOMER")
     private UserType type;
 
     public String getName() {

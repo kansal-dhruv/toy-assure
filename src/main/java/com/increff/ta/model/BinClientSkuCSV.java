@@ -1,15 +1,19 @@
 package com.increff.ta.model;
 
+import com.increff.ta.utils.MustBePositiveNumber;
 import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.validators.PreAssignmentValidator;
 
 public class BinClientSkuCSV {
 
+    @PreAssignmentValidator(validator = MustBePositiveNumber.class)
     @CsvBindByPosition(position = 0, required = true)
     private Long binId;
 
     @CsvBindByPosition(position = 1, required = true)
     private String clientSkuId;
 
+    @PreAssignmentValidator(validator = MustBePositiveNumber.class)
     @CsvBindByPosition(position = 2, required = true)
     private Long quantity;
 

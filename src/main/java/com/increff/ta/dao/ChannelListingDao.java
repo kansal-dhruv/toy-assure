@@ -9,20 +9,18 @@ import javax.persistence.TypedQuery;
 public class ChannelListingDao extends AbstractDao {
 
     private final String select_by_channelSku_channelId_globalSku_id =
-            "SELECT e FROM ChannelListing e where e.channel.id=:channelId and e.channelSkuId=:channelSkuId and e.product.globalSkuId=:globalSkuId";
+            "SELECT e FROM ChannelListing e where e.channelSkuId=:channelSkuId";
 
     private final String select_by_channelSku_channelId_clientId =
-            "SELECT e from ChannelListing e where e.channel.id=:channelId and e.channelSkuId=:channelSkuId and e.user.id=:clientId";
+            "SELECT e from ChannelListing e where e.channelId=:channelId and e.channelSkuId=:channelSkuId and e.clientId=:clientId";
 
     public ChannelListing saveOrUpdate(ChannelListing channelListing) {
         return em.merge(channelListing);
     }
 
-    public ChannelListing findByChannelSkuIdAndChannelIdAndGlobalSkuId(Long channelId, String channelSkuId, Long globalSkuId) {
+    public ChannelListing findByChannelSkuId(String channelSkuId) {
         TypedQuery<ChannelListing> query = getQuery(select_by_channelSku_channelId_globalSku_id, ChannelListing.class);
-        query.setParameter("channelId", channelId);
         query.setParameter("channelSkuId", channelSkuId);
-        query.setParameter("globalSkuId", globalSkuId);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 

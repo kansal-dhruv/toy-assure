@@ -3,26 +3,26 @@ package com.increff.ta.pojo;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "assure_channel_lisitng")
+@Table(name = "assure_channel_lisitng",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {
+                        "channelSkuId",
+                        "channelId",
+                        "globalSkuId"
+                }))
 public class ChannelListing extends AbstractModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "channelId")
-    private Channel channel;
+    private Long channelId;
 
     private String channelSkuId;
 
-    @ManyToOne
-    @JoinColumn(name = "clientId")
-    private User user;
+    private Long clientId;
 
-    @ManyToOne
-    @JoinColumn(name = "globalSkuId")
-    private Product product;
+    private Long globalSkuId;
 
     public Long getId() {
         return id;
@@ -32,12 +32,12 @@ public class ChannelListing extends AbstractModel {
         this.id = id;
     }
 
-    public Channel getChannel() {
-        return channel;
+    public Long getChannelId() {
+        return channelId;
     }
 
-    public void setChannel(Channel channel) {
-        this.channel = channel;
+    public void setChannelId(Long channelId) {
+        this.channelId = channelId;
     }
 
     public String getChannelSkuId() {
@@ -48,19 +48,19 @@ public class ChannelListing extends AbstractModel {
         this.channelSkuId = channelSkuId;
     }
 
-    public User getUser() {
-        return user;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getGlobalSkuId() {
+        return globalSkuId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setGlobalSkuId(Long globalSkuId) {
+        this.globalSkuId = globalSkuId;
     }
 }

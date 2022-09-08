@@ -12,17 +12,11 @@ public class Orders extends AbstractModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "clientId")
-    private User client;
+    private Long clientId;
 
-    @ManyToOne
-    @JoinColumn(name = "customerId")
-    private User customer;
+    private Long customerId;
 
-    @ManyToOne
-    @JoinColumn(name = "channelId")
-    private Channel channel;
+    private Long channelId;
 
     @Column(unique = true)
     private String channelOrderId;
@@ -38,28 +32,28 @@ public class Orders extends AbstractModel {
         this.id = id;
     }
 
-    public User getClient() {
-        return client;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setClient(User client) {
-        this.client = client;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
-    public User getCustomer() {
-        return customer;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer(User customer) {
-        this.customer = customer;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    public Channel getChannel() {
-        return channel;
+    public Long getChannelId() {
+        return channelId;
     }
 
-    public void setChannel(Channel channel) {
-        this.channel = channel;
+    public void setChannelId(Long channelId) {
+        this.channelId = channelId;
     }
 
     public String getChannelOrderId() {

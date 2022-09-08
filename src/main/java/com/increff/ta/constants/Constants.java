@@ -15,9 +15,11 @@ public class Constants {
     public static Integer CODE_DUPLICATE_CHANNEL_ORDER_ID = -13;
     public static Integer CODE_INAVLID_CHANNEL = -14;
     public static Integer CODE_INVALID_CHANNEL_LISTING_ID = -15;
+    public static Integer CODE_ISSUE_GENERATING_INVOICE = -16;
+    public static Integer CODE_EMPTY_ORDER_ITEM_LIST = -17;
 
 
-    public static String MSG_USERNAME_ALREADY_EXISTS = "Input client name already exists";
+    public static String MSG_USERNAME_ALREADY_EXISTS = "Input username already exists";
     public static String MSG_ERROR_PARSING_CSV_FILE = "Error while parsing the CSV file";
     public static String MSG_DUPLICATE_CLIENT_SKU_ID = "There Cannot be same clientSkuId for a given clientId";
     public static String MSG_INVALID_USER = "Invalid User";
@@ -31,4 +33,7 @@ public class Constants {
     public static String MSG_DUPLICATE_CHANNEL_ORDER_ID = "Channel order ID must be unique";
     public static String MSG_INVALID_CHANNEL = "Invalid channel name";
     public static String MSG_INVALID_CHANNEL_LISTING_ID = "Invalid channel listing";
+    public static String MSG_ISSUE_GENERATING_INVOICE = "Issue while generating invoice";
+    public static String MSG_EMPTY_ORDER_ITEM_LIST = "Order Item list cannot be empty";
+
 }

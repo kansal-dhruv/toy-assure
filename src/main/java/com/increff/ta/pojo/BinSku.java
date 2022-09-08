@@ -9,13 +9,10 @@ public class BinSku extends AbstractModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "binId")
-    private Bin bin;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "globalSkuId")
-    private Product product;
+    private Long binId;
+
+    private Long globalSkuId;
 
     private Long quantity;
 
@@ -27,20 +24,20 @@ public class BinSku extends AbstractModel {
         this.id = id;
     }
 
-    public Bin getBin() {
-        return bin;
+    public Long getBinId() {
+        return binId;
     }
 
-    public void setBin(Bin bin) {
-        this.bin = bin;
+    public void setBinId(Long binId) {
+        this.binId = binId;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getGlobalSkuId() {
+        return globalSkuId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setGlobalSkuId(Long globalSkuId) {
+        this.globalSkuId = globalSkuId;
     }
 
     public Long getQuantity() {

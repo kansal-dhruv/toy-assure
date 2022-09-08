@@ -11,13 +11,9 @@ public class OrderItem extends AbstractModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderId")
-    private Orders orders;
+    private Long orderId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "globalSkuId")
-    private Product product;
+    private Long globalSkuId;
 
     private Long orderedQuantity = 0L;
 
@@ -37,20 +33,20 @@ public class OrderItem extends AbstractModel {
         this.id = id;
     }
 
-    public Orders getOrder() {
-        return orders;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(Orders orders) {
-        this.orders = orders;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getGlobalSkuId() {
+        return globalSkuId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setGlobalSkuId(Long globalSkuId) {
+        this.globalSkuId = globalSkuId;
     }
 
     public Long getOrderedQuantity() {

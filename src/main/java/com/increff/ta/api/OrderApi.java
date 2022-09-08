@@ -1,4 +1,4 @@
-package com.increff.ta.service;
+package com.increff.ta.api;
 
 import com.increff.ta.constants.Constants;
 import com.increff.ta.dao.*;
@@ -8,25 +8,19 @@ import com.increff.ta.model.OrderForm;
 import com.increff.ta.model.OrderItemForm;
 import com.increff.ta.model.OrderUploadCSV;
 import com.increff.ta.pojo.*;
-import com.opencsv.bean.CsvToBeanBuilder;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBException;
-import java.io.ByteArrayInputStream;
+import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
-public class OrderService {
+public class OrderApi {
 
     @Autowired
     private UserDao userDao;
@@ -55,25 +49,16 @@ public class OrderService {
     @Autowired
     private InvoiceService invoiceService;
 
+    @Transactional
     public void createOrderCSV(Long clientId, String channelOrderId,
-                               Long customerId, MultipartFile csvFile) {
+                               Long customerId, List<OrderUploadCSV> orderUploadDetails) {
         User client = userDao.selectById(clientId);
         User customer = userDao.selectById(customerId);
         if (client == null || customer == null
                 || !isClientAndCustomerValid(client, customer)) {
             throw new ApiException(Constants.CODE_INVALID_USER, Constants.MSG_INVALID_USER);
         }
-        List<OrderUploadCSV> orderUploadDetails = null;
-        try {
-            orderUploadDetails = new CsvToBeanBuilder(new InputStreamReader(new ByteArrayInputStream(csvFile.getBytes()), "UTF8"))
-                    .withType(OrderUploadCSV.class).withSkipLines(1).build().parse();
-        } catch (Exception e) {
-            throw new ApiException(Constants.CODE_ERROR_PARSING_CSV_FILE, Constants.MSG_ERROR_PARSING_CSV_FILE);
-        }
-        Set<String> clientSkuIds = orderUploadDetails.stream().map((OrderUploadCSV orderUploadDetail) -> orderUploadDetail.getClientSkuId()).collect(Collectors.toSet());
-        if (clientSkuIds.size() != orderUploadDetails.size()) {
-            throw new ApiException(Constants.CODE_DUPLICATE_CLIENT_SKU_ID, Constants.MSG_DUPLICATE_CLIENT_SKU_ID);
-        }
+
         Channel defaultChannel = channelDao.findByChannelName("INTERNAL");
         if (defaultChannel == null) {
             throw new ApiException(Constants.CODE_INTERNAL_CHANNEL_NOT_FOUND, Constants.MSG_INTERNAL_CHANNEL_NOT_FOUND);
@@ -83,28 +68,22 @@ public class OrderService {
         }
 
         Orders orders = new Orders();
-        orders.setClient(client);
+        orders.setClientId(clientId);
         orders.setChannelOrderId(channelOrderId);
-        orders.setChannel(defaultChannel);
-        orders.setCustomer(customer);
+        orders.setChannelId(defaultChannel.getId());
+        orders.setCustomerId(customerId);
         orders.setStatus(OrderStatus.CREATED);
         orders = orderDao.saveOrUpdate(orders);
 
-        for (OrderUploadCSV orderUploadDetail : orderUploadDetails) {
-            Product product = productDao.findByClientSkuId(orderUploadDetail.getClientSkuId());
-            if (product == null) {
-                throw new ApiException(Constants.CODE_PRODUCT_NOT_FOUND, Constants.MSG_PRODUCT_NOT_FOUND,
-                        "Product with clientSkuId" + orderUploadDetail.getClientSkuId() + "not present");
-            }
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(orders);
-            orderItem.setOrderedQuantity(orderUploadDetail.getOrderedQuantity());
-            orderItem.setProduct(product);
-            orderItem.setSellingPricePerUnit(orderUploadDetail.getSellingPricePerUnit());
+        List<OrderItem> orderItems = convertCsvToPojo(orderUploadDetails);
+
+        for (OrderItem orderItem : orderItems) {
+            orderItem.setOrderId(orders.getId());
             orderItemDao.saveOrUpdate(orderItem);
         }
     }
 
+    @Transactional
     public void createOrder(OrderForm orderForm) {
         User client = userDao.selectById(orderForm.getClientId());
         User customer = userDao.selectById(orderForm.getCustomerId());
@@ -120,11 +99,14 @@ public class OrderService {
         if (orderDao.findByChannelOrderId(orderForm.getChannelOrderId()) != null) {
             throw new ApiException(Constants.CODE_DUPLICATE_CHANNEL_ORDER_ID, Constants.MSG_DUPLICATE_CHANNEL_ORDER_ID);
         }
+        if (CollectionUtils.isEmpty(orderForm.getOrderItemList())){
+            throw new ApiException(Constants.CODE_EMPTY_ORDER_ITEM_LIST, Constants.MSG_EMPTY_ORDER_ITEM_LIST);
+        }
         Orders orders = new Orders();
-        orders.setClient(client);
+        orders.setClientId(orders.getClientId());
         orders.setChannelOrderId(orderForm.getChannelOrderId());
-        orders.setChannel(channel);
-        orders.setCustomer(customer);
+        orders.setChannelId(channel.getId());
+        orders.setCustomerId(orderForm.getCustomerId());
         orders.setStatus(OrderStatus.CREATED);
         orders = orderDao.saveOrUpdate(orders);
 
@@ -134,23 +116,24 @@ public class OrderService {
                 throw new ApiException(Constants.CODE_INVALID_CHANNEL_LISTING_ID, Constants.MSG_INVALID_CHANNEL_LISTING_ID,
                         "Channel Listing not found for channelSkuId and clientId: " + item.getChannelSkuId() + ", " + channel.getId());
             OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(orders);
+            orderItem.setOrderId(orders.getId());
             orderItem.setOrderedQuantity(item.getQuantity());
-            orderItem.setProduct(channelListing.getProduct());
+            orderItem.setGlobalSkuId(channelListing.getGlobalSkuId());
             orderItemDao.saveOrUpdate(orderItem);
         }
     }
 
+    @Transactional
     public void allocateOrder(Long orderId) {
         Orders order = orderDao.findByOrderId(orderId);
         boolean areAllOrderItemsAllocated = true;
         if (order!=null && order.getStatus().equals(OrderStatus.CREATED)) {
             List<OrderItem> orderItemList = orderItemDao.findByOrderId(orderId);
             for (OrderItem orderItem : orderItemList) {
-                Inventory inv = inventoryDao.findByGlobalSkuid(orderItem.getProduct().getGlobalSkuId());
+                Inventory inv = inventoryDao.findByGlobalSkuid(orderItem.getGlobalSkuId());
                 if (inv == null) {
                     throw new ApiException(Constants.CODE_ITEM_NOT_IN_INVENTORY, Constants.MSG_ITEM_NOT_IN_INVENTORY,
-                            "Product with clientSkuID: " + orderItem.getProduct().getClientSkuId() + " id not present in inventory");
+                            "Product with globalSkuId: " + orderItem.getGlobalSkuId() + " id not present in inventory");
 
                 }
                 Long allocationAmount = Math.min(inv.getAvailableQuantity(), orderItem.getOrderedQuantity() - orderItem.getAllocatedQuanity());
@@ -160,7 +143,7 @@ public class OrderService {
                 if (!Objects.equals(orderItem.getAllocatedQuanity(), orderItem.getOrderedQuantity())) {
                     areAllOrderItemsAllocated = false;
                 }
-                List<BinSku> binSkuList = binSkuDao.findByglobalSkuId(orderItem.getProduct().getGlobalSkuId());
+                List<BinSku> binSkuList = binSkuDao.findByglobalSkuId(orderItem.getGlobalSkuId());
                 int binCount = 0;
                 while (allocationAmount != 0) {
                     BinSku selectedBin = binSkuList.get(binCount);
@@ -183,26 +166,49 @@ public class OrderService {
         }
     }
 
-    private Boolean isClientAndCustomerValid(User client, User customer) {
-        return client.getType().equals(UserType.CLIENT) && customer.getType().equals(UserType.CUSTOMER);
-    }
-
-    public void fulfillOrder(Long orderId, HttpServletResponse response) throws JAXBException, URISyntaxException, IOException {
+    @Transactional
+    public void fulfillOrder(Long orderId, HttpServletResponse response) {
         Orders order = orderDao.findByOrderId(orderId);
         if (order!=null && order.getStatus() == OrderStatus.ALLOCATED) {
             String fileName = "Invoice_" + orderId;
             List<OrderItem> orderItems = orderItemDao.findByOrderId(orderId);
-            byte[] invoiceBytes = invoiceService.generateInvoice(orderItems, order);
-            order.setStatus(OrderStatus.FULFILLED);
-            response.setContentType("application/pdf");
-            response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
-            response.setContentLengthLong(invoiceBytes.length);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            baos.write(invoiceBytes);
-            baos.writeTo(response.getOutputStream());
-            baos.close();
+            try {
+                byte[] invoiceBytes = invoiceService.generateInvoice(orderItems, order);
+                order.setStatus(OrderStatus.FULFILLED);
+                response.setContentType("application/pdf");
+                response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+                response.setContentLengthLong(invoiceBytes.length);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                baos.write(invoiceBytes);
+                baos.writeTo(response.getOutputStream());
+                baos.close();
+            } catch (Exception e){
+                throw new ApiException(Constants.CODE_ISSUE_GENERATING_INVOICE, Constants.MSG_ISSUE_GENERATING_INVOICE);
+            }
         } else {
             throw new ApiException(Constants.CODE_INVALID_ORDER_ID, Constants.MSG_INVALID_ORDER_ID, "Input order is not allocated");
         }
+    }
+
+    private Boolean isClientAndCustomerValid(User client, User customer) {
+        return client.getType().equals(UserType.CLIENT) && customer.getType().equals(UserType.CUSTOMER);
+    }
+
+    private List<OrderItem> convertCsvToPojo(List<OrderUploadCSV> orderUploadDetails){
+        List<OrderItem> orderItems = new ArrayList<>();
+        for(OrderUploadCSV orderUploadDetail : orderUploadDetails){
+            Product prodcut = productDao.findByClientSkuId(orderUploadDetail.getClientSkuId());
+            if(prodcut == null){
+                throw new ApiException(Constants.CODE_PRODUCT_NOT_FOUND, Constants.MSG_PRODUCT_NOT_FOUND,
+                        "Product with clientSkuId" + orderUploadDetail.getClientSkuId() + "not present");
+            }
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrderedQuantity(orderUploadDetail.getOrderedQuantity());
+            orderItem.setGlobalSkuId(prodcut.getGlobalSkuId());
+            orderItem.setOrderedQuantity(orderUploadDetail.getOrderedQuantity());
+            orderItem.setSellingPricePerUnit(orderUploadDetail.getSellingPricePerUnit());
+            orderItems.add(orderItem);
+        }
+        return orderItems;
     }
 }

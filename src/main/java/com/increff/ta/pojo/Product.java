@@ -21,9 +21,7 @@ public class Product extends AbstractModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long globalSkuId;
 
-    @OneToOne
-    @JoinColumn(name = "client_id")
-    private User client;
+    private Long clientId;
 
     public Long getGlobalSkuId() {
         return globalSkuId;
@@ -33,12 +31,12 @@ public class Product extends AbstractModel {
         this.globalSkuId = globalSkuId;
     }
 
-    public User getClient() {
-        return client;
+    public Long getClient() {
+        return clientId;
     }
 
-    public void setClient(User client) {
-        this.client = client;
+    public void setClient(Long clientId) {
+        this.clientId = clientId;
     }
 
     public String getClientSkuId() {

@@ -10,11 +10,11 @@ import java.util.List;
 @Repository
 public class BinSkuDao extends AbstractDao {
 
-    private final String select_by_globalSkuId = "SELECT e from BinSku e where e.product.globalSkuId=:globalSkuId ORDER BY e.quantity DESC";
+    private final String select_by_globalSkuId = "SELECT e from BinSku e where e.globalSkuId=:globalSkuId ORDER BY e.quantity DESC";
 
-    private final String select_by_binId_and_globalSkuId = "SELECT e from BinSku e where e.bin.binId=:binId and e.product.globalSkuId=:globalSkuId";
+    private final String select_by_binId_and_globalSkuId = "SELECT e from BinSku e where e.binId=:binId and e.globalSkuId=:globalSkuId";
 
-    private final String select_total_count_by_globalSkuId = "SELECT SUM(e.quantity) from BinSku e where e.product.globalSkuId=:globalSkuId";
+    private final String select_total_count_by_globalSkuId = "SELECT SUM(e.quantity) from BinSku e where e.globalSkuId=:globalSkuId";
 
     public List<BinSku> findByglobalSkuId(Long globalSkuId) {
         TypedQuery<BinSku> query = getQuery(select_by_globalSkuId, BinSku.class);

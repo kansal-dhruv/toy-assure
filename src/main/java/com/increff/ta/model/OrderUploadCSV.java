@@ -1,15 +1,19 @@
 package com.increff.ta.model;
 
+import com.increff.ta.utils.MustBePositiveNumber;
 import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.validators.PreAssignmentValidator;
 
 public class OrderUploadCSV {
 
     @CsvBindByPosition(position = 0, required = true)
     private String clientSkuId;
 
+    @PreAssignmentValidator(validator = MustBePositiveNumber.class)
     @CsvBindByPosition(position = 1, required = true)
     private Long orderedQuantity;
 
+    @PreAssignmentValidator(validator = MustBePositiveNumber.class)
     @CsvBindByPosition(position = 2, required = true)
     private Double sellingPricePerUnit;
 

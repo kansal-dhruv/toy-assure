@@ -1,11 +1,11 @@
-package com.increff.ta.service;
+package com.increff.ta.api;
 
 public class ApiException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     private Integer code = -1;
-    private String description;
+    private Object description;
 
     public ApiException(String string) {
         super(string);
@@ -16,7 +16,7 @@ public class ApiException extends RuntimeException {
         this.code = code;
     }
 
-    public ApiException(Integer code, String message, String description) {
+    public ApiException(Integer code, String message, Object description) {
         super(message);
         this.code = code;
         this.description = description;
@@ -30,11 +30,11 @@ public class ApiException extends RuntimeException {
         this.code = code;
     }
 
-    public String getDescription() {
+    public Object getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(Object description) {
         this.description = description;
     }
 }

@@ -1,6 +1,8 @@
 package com.increff.ta.model;
 
+import com.increff.ta.utils.MustBePositiveNumber;
 import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.validators.PreAssignmentValidator;
 
 public class ProductDetailCSV {
 
@@ -13,6 +15,7 @@ public class ProductDetailCSV {
     @CsvBindByPosition(position = 2, required = true)
     protected String brandId;
 
+    @PreAssignmentValidator(validator = MustBePositiveNumber.class)
     @CsvBindByPosition(position = 3, required = true)
     protected Double mrp;
 

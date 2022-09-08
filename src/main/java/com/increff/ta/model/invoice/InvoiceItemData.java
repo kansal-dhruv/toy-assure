@@ -1,4 +1,4 @@
-package com.increff.ta.pojo.invoice;
+package com.increff.ta.model.invoice;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

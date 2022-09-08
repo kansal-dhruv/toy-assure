@@ -1,11 +1,11 @@
 package com.increff.ta.spring;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -18,9 +18,11 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.json.Json;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Configuration
@@ -86,10 +88,21 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(new ObjectMapper());
-        converters.add(converter);
+//        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+//        converter.setObjectMapper(new ObjectMapper());
+//        converters.add(converter);
+        GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
+        gsonHttpMessageConverter.setGson(gson());
+        converters.add(gsonHttpMessageConverter);
         super.configureMessageConverters(converters);
+    }
+
+    private Gson gson() {
+        final GsonBuilder builder = new GsonBuilder();
+        JsonSerializer<Json> jsonSerializer =
+            (Json json, Type type, JsonSerializationContext context) -> new JsonParser().parse(json.value());
+        builder.registerTypeAdapter(Json.class, jsonSerializer);
+        return builder.create();
     }
 
 }

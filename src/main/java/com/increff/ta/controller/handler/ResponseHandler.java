@@ -1,5 +1,6 @@
 package com.increff.ta.controller.handler;
 
+import com.increff.ta.api.ApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -11,6 +12,17 @@ public class ResponseHandler {
         Map<String, Object> map = new HashMap<String, Object>();
         if (message != null)
             map.put("message", message);
+        if (responseObj != null)
+            map.put("data", responseObj);
+        return new ResponseEntity<Object>(map, status);
+    }
+
+    public static ResponseEntity<Object> generateResponse(ApiException e, HttpStatus status, Object responseObj) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(e.getCode() != null)
+            map.put("code", e.getCode());
+        if (e.getMessage() != null)
+            map.put("message", e.getMessage());
         if (responseObj != null)
             map.put("data", responseObj);
         return new ResponseEntity<Object>(map, status);

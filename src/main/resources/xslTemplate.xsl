@@ -44,7 +44,7 @@
                   </fo:block>
                 </fo:table-cell>
 				<fo:table-cell text-align="center">
-                  <fo:block>Order Id:
+                  <fo:block>Client Id:
                     <xsl:value-of select="client-id"/>
                   </fo:block>
                 </fo:table-cell>
@@ -101,11 +101,12 @@
                   </fo:table-cell>
                   <fo:table-cell text-align="center" padding-bottom="2px" padding-top="2px">
                     <fo:block>
-                      \u20B9<xsl:value-of select="format-number(selling-price-per-unit, '###,###.00')"/>
+                      <xsl:value-of select="format-number(selling-price-per-unit, '###,###.00')"/>
                     </fo:block>
                   </fo:table-cell>
                   <fo:table-cell text-align="center" padding-bottom="2px" padding-top="2px">
-                    \u20B9<fo:block><xsl:value-of select="format-number(amount, '###,###.00')"/>
+                    <fo:block>
+                      <xsl:value-of select="format-number(amount, '###,###.00')"/>
                     </fo:block>
                   </fo:table-cell>
                 </fo:table-row>
@@ -122,7 +123,8 @@
                   <fo:block font-weight="bold">Sub Total: </fo:block>
                 </fo:table-cell>
                 <fo:table-cell text-align="center" padding-bottom="2px" padding-top="2px">
-                  <fo:block>\u20B9<xsl:value-of select="format-number(invoice-total, '###,###.00')"/>
+                  <fo:block>
+                    <xsl:value-of select="format-number(invoice-total, '###,###.00')"/>
                   </fo:block>
                 </fo:table-cell>
               </fo:table-row>

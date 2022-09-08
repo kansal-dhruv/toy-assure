@@ -1,4 +1,4 @@
-package com.increff.ta.service;
+package com.increff.ta.api;
 
 import com.increff.ta.dao.InventoryDao;
 import com.increff.ta.pojo.Inventory;
@@ -17,7 +17,7 @@ public class InventoryService {
         if (inv == null) {
             inv = new Inventory();
             inv.setAvailableQuantity(totalQuantity);
-            inv.setProduct(product);
+            inv.setGlobalSkuId(product.getGlobalSkuId());
             inventoryDao.insertOrUpdate(inv);
         } else {
             inv.setAvailableQuantity(totalQuantity);
