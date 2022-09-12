@@ -11,6 +11,10 @@ public class ProductDao extends AbstractDao {
 
     private final String select_by_clientSkuId = "SELECT e from Product e where e.clientSkuId=:clientSkuId";
 
+    private final String select_by_clientSkuId_and_ClientId = "SELECT e from Product e where e" +
+        ".clientSkuId=:clientSkuId" +
+        " and e.clientId=:clientId";
+
     private final String select_by_globalSkuId = "SELECT e FROM Product e where e.globalSkuId=:globalSkuId";
 
     @Transactional
@@ -21,6 +25,13 @@ public class ProductDao extends AbstractDao {
     public Product findByClientSkuId(String clientSkuId) {
         TypedQuery<Product> query = getQuery(select_by_clientSkuId, Product.class);
         query.setParameter("clientSkuId", clientSkuId);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    public Product findByClientSkuIdAndClientId(String clientSkuId, Long clientId) {
+        TypedQuery<Product> query = getQuery(select_by_clientSkuId_and_ClientId, Product.class);
+        query.setParameter("clientSkuId", clientSkuId);
+        query.setParameter("clientId", clientId);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 

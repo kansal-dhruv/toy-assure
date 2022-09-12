@@ -32,8 +32,8 @@ public class RestResponseEntityExceptionHandler
             = {MethodArgumentTypeMismatchException.class})
     protected ResponseEntity<Object> handleConflictApiException(
             MethodArgumentTypeMismatchException ex, WebRequest request) {
-        ex.printStackTrace();
-        return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        String errorMessage = "Field '" + ex.getName() + "' must be a " + ex.getRequiredType().getSimpleName();
+        return ResponseHandler.generateResponse(new ApiException(-1, "Bad Input"), HttpStatus.BAD_REQUEST, errorMessage);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.increff.ta.constants.Constants;
 import com.increff.ta.model.ProductDetailCSV;
 import com.increff.ta.pojo.Product;
 import com.increff.ta.utils.CSVUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,10 @@ public class ProductDto {
     private ProductApi productApi;
 
     public void addProdcutsFromCSV(MultipartFile csvFile, Long clientId){
+        if(!FilenameUtils.isExtension(csvFile.getOriginalFilename(), "csv")){
+            throw new ApiException(Constants.CODE_ERROR_PARSING_CSV_FILE, Constants.MSG_ERROR_PARSING_CSV_FILE,
+                "Input file is not a valid CSV file");
+        }
         List<ProductDetailCSV> productdetails = null;
         try {
             productdetails = CSVUtils.parseCSV(csvFile.getBytes(), ProductDetailCSV.class);

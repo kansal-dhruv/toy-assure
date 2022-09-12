@@ -34,7 +34,7 @@ public class BinController {
     @ApiOperation(value = "Add products in bins")
     @RequestMapping(value = "/api/bin/putProducts", method = RequestMethod.POST)
     public ResponseEntity<Object> putProducts(@RequestBody @NotNull(message = "CSV file cannot be null") MultipartFile csvfile) throws ApiException, IOException {
-        binDto.putProductsToBin(csvfile.getBytes());
+        binDto.putProductsToBin(csvfile);
         return ResponseHandler.successResponse();
     }
 }

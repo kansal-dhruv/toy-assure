@@ -7,6 +7,7 @@ import com.increff.ta.dao.ProductDao;
 import com.increff.ta.model.OrderForm;
 import com.increff.ta.model.OrderUploadCSV;
 import com.increff.ta.utils.CSVUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,10 @@ public class OrderDto {
 
 
     public void createOrderCSV(Long clientId, String channelOrderId, Long customerId, MultipartFile csvFile) {
+        if(!FilenameUtils.isExtension(csvFile.getOriginalFilename(), "csv")){
+            throw new ApiException(Constants.CODE_ERROR_PARSING_CSV_FILE, Constants.MSG_ERROR_PARSING_CSV_FILE,
+                "Input file is not a valid CSV file");
+        }
         List<OrderUploadCSV> orderUploadDetails = null;
         try {
             orderUploadDetails = CSVUtils.parseCSV(csvFile.getBytes(), OrderUploadCSV.class);

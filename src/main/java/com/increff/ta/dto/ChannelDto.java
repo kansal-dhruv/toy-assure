@@ -7,6 +7,7 @@ import com.increff.ta.model.ChannelForm;
 import com.increff.ta.model.ChannelListingCSV;
 import com.increff.ta.pojo.Channel;
 import com.increff.ta.utils.CSVUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,10 @@ public class ChannelDto {
     }
 
     public void addChannelListing(String channelName, String clientName, MultipartFile csvFile) {
+        if(!FilenameUtils.isExtension(csvFile.getOriginalFilename(), "csv")){
+            throw new ApiException(Constants.CODE_ERROR_PARSING_CSV_FILE, Constants.MSG_ERROR_PARSING_CSV_FILE,
+                "Input file is not a valid CSV file");
+        }
         List<ChannelListingCSV> channelListingDetails = null;
         try {
             channelListingDetails = CSVUtils.parseCSV(csvFile.getBytes(), ChannelListingCSV.class);
