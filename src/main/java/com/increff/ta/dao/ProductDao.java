@@ -7,6 +7,7 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 @Repository
+@Transactional
 public class ProductDao extends AbstractDao {
 
     private final String select_by_clientSkuId = "SELECT e from Product e where e.clientSkuId=:clientSkuId";
@@ -17,7 +18,6 @@ public class ProductDao extends AbstractDao {
 
     private final String select_by_globalSkuId = "SELECT e FROM Product e where e.globalSkuId=:globalSkuId";
 
-    @Transactional
     public Product addProduct(Product product) {
         return em.merge(product);
     }

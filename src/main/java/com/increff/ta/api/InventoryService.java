@@ -24,11 +24,6 @@ public class InventoryService {
         }
     }
 
-    public void incrementAllocatedQuantity(Product product, Long quantity) {
-        Inventory inv = inventoryDao.findByGlobalSkuid(product.getGlobalSkuId());
-        inv.setAllocatedQuantity(inv.getAllocatedQuantity() + quantity);
-    }
-
     public void incrementFulFilledQuantity(Product product, Long quantity) {
         Inventory inv = inventoryDao.findByGlobalSkuid(product.getGlobalSkuId());
         inv.setFulfilledQuantity(inv.getFulfilledQuantity() + quantity);
@@ -39,12 +34,11 @@ public class InventoryService {
         inv.setAllocatedQuantity(inv.getAllocatedQuantity() - quantity);
     }
 
-    public void decrementFulFilledQuantity(Product product, Long quantity) {
-        Inventory inv = inventoryDao.findByGlobalSkuid(product.getGlobalSkuId());
-        inv.setFulfilledQuantity(inv.getFulfilledQuantity() - quantity);
+    public Inventory getInventoryByGlobalSkuId(Long globalSkuid){
+        return inventoryDao.findByGlobalSkuid(globalSkuid);
     }
 
-    public Inventory getInventoryByClientSkuId(String clientSkuId) {
-        return inventoryDao.findByClientSkuid(clientSkuId);
+    public Inventory updateInventory(Inventory inventory){
+        return inventoryDao.insertOrUpdate(inventory);
     }
 }

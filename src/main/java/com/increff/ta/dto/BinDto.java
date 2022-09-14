@@ -2,24 +2,33 @@ package com.increff.ta.dto;
 
 import com.increff.ta.api.ApiException;
 import com.increff.ta.api.BinApi;
+import com.increff.ta.api.InventoryService;
+import com.increff.ta.api.ProductApi;
 import com.increff.ta.constants.Constants;
+import com.increff.ta.dto.helper.BinDtoHelper;
 import com.increff.ta.model.BinClientSkuCSV;
-import com.increff.ta.utils.CSVUtils;
-import org.apache.commons.io.FilenameUtils;
+import com.increff.ta.pojo.Bin;
+import com.increff.ta.pojo.BinSku;
+import com.increff.ta.pojo.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class BinDto {
 
   @Autowired
   private BinApi binApi;
+
+  @Autowired
+  private ProductApi productApi;
+
+  @Autowired
+  private InventoryService inventoryService;
+
 
   public List<Long> createBins(Integer count) {
     if (count == null || count <= 0) {
@@ -28,23 +37,38 @@ public class BinDto {
     return binApi.createBins(count);
   }
 
+  @Transactional
   public void putProductsToBin(MultipartFile csvFile) {
-    if (!FilenameUtils.isExtension(csvFile.getOriginalFilename(), "csv")) {
-      throw new ApiException(Constants.CODE_ERROR_PARSING_CSV_FILE, Constants.MSG_ERROR_PARSING_CSV_FILE,
-          "Input file is not a valid CSV file");
-    }
-    List<BinClientSkuCSV> binQuantityList;
-    try {
-      binQuantityList = CSVUtils.parseCSV(csvFile.getBytes(), BinClientSkuCSV.class);
-    } catch (IOException e) {
-      throw new ApiException(Constants.CODE_ERROR_PARSING_CSV_FILE, Constants.MSG_ERROR_PARSING_CSV_FILE);
-    }
-    Set<String> binIdClientSkuIdsMapping = binQuantityList.stream().map(binQuantity -> binQuantity.getBinId() + binQuantity.getClientSkuId()).collect(Collectors.toSet());
-    if (binIdClientSkuIdsMapping.size() != binQuantityList.size()) {
-      throw new ApiException(Constants.CODE_BINID_CLIENTSKUID_SHOULD_BE_UNIQUE, Constants.MSG_BINID_CLIENTSKUID_SHOULD_BE_UNIQUE);
-    }
+    List<BinClientSkuCSV> binQuantityList = BinDtoHelper.parseAndValidateCSVFile(csvFile);
     for (BinClientSkuCSV binClientSkuCSV : binQuantityList) {
-      binApi.putProdcutToBin(binClientSkuCSV.getBinId(), binClientSkuCSV.getClientSkuId(), binClientSkuCSV.getQuantity());
+      Product product = productApi.getProductByClientSkuID(binClientSkuCSV.getClientSkuId());
+      if(product == null){
+        throw new ApiException(Constants.CODE_PRODUCT_NOT_FOUND, Constants.MSG_PRODUCT_NOT_FOUND,
+            "ClientSkuId: " + binClientSkuCSV.getClientSkuId() + " not found");
+      }
+      Bin bin = binApi.getBinById(binClientSkuCSV.getBinId());
+      if (bin == null) {
+        throw new ApiException(Constants.CODE_BIN_NOT_FOUND, Constants.MSG_BIN_NOT_FOUND,
+            "Bin with ID: " + binClientSkuCSV.getBinId() + " not found");
+      }
+      BinSku binSku = createBinSku(bin, product, binClientSkuCSV.getQuantity());
+      binApi.putProductToBin(binSku);
+
+      Long totalQuantity = binApi.getTotalQuantityByGlobalSkuID(product);
+      inventoryService.updateAvailableQuantity(product, totalQuantity);
+
     }
+  }
+  private BinSku createBinSku(Bin bin, Product product, Long quantity){
+    BinSku binSku = binApi.getBinSkuByClientSkuIdAndBinId(bin, product);
+    if (binSku == null) {
+      binSku = new BinSku();
+      binSku.setGlobalSkuId(product.getGlobalSkuId());
+      binSku.setBinId(bin.getBinId());
+      binSku.setQuantity(quantity);
+    } else {
+      binSku.setQuantity(quantity);
+    }
+    return binSku;
   }
 }

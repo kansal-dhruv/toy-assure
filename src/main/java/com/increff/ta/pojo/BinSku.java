@@ -1,50 +1,30 @@
 package com.increff.ta.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "assure_bin_sku")
+@Table(name = "assure_bin_sku",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"binId", "globalSkuId"}))
+@Getter
+@Setter
 public class BinSku extends AbstractModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @NotNull
     private Long binId;
 
+    @NotNull
     private Long globalSkuId;
 
+    @Min(0)
+    @NotNull
     private Long quantity;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getBinId() {
-        return binId;
-    }
-
-    public void setBinId(Long binId) {
-        this.binId = binId;
-    }
-
-    public Long getGlobalSkuId() {
-        return globalSkuId;
-    }
-
-    public void setGlobalSkuId(Long globalSkuId) {
-        this.globalSkuId = globalSkuId;
-    }
-
-    public Long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
-    }
 }

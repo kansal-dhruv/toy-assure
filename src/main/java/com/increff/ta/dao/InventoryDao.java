@@ -4,8 +4,10 @@ import com.increff.ta.pojo.Inventory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 @Repository
+@Transactional
 public class InventoryDao extends AbstractDao {
 
     private final String select_by_globalSkuId = "SELECT e FROM Inventory e where e.globalSkuId=:globalSkuId";
@@ -18,6 +20,7 @@ public class InventoryDao extends AbstractDao {
     public Inventory findByGlobalSkuid(Long globalSkuid) {
         TypedQuery<Inventory> query = getQuery(select_by_globalSkuId, Inventory.class);
         query.setParameter("globalSkuId", globalSkuid);
+
         return query.getResultList().stream().findFirst().orElse(null);
     }
 

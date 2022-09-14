@@ -12,6 +12,8 @@ import java.util.Date;
 @MappedSuperclass
 public class AbstractModel {
 
+    //TODO indexes on non unique constraints like createdOn
+
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     protected Date createdOn;

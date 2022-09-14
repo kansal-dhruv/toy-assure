@@ -8,11 +8,11 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 @Repository
+@Transactional
 public class UserDao extends AbstractDao {
 
     private final String select_by_name_and_type = "SELECT e from User e where e.name=:name and e.type=:type";
 
-    @Transactional
     public User insert(User user) {
         return em.merge(user);
     }

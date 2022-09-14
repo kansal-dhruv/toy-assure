@@ -19,20 +19,21 @@ import java.util.List;
 @Api
 @RestController
 @Validated
+@RequestMapping("/api/bin")
 public class BinController {
 
     @Autowired
     private BinDto binDto;
 
     @ApiOperation(value = "Used to create new bins")
-    @RequestMapping(value = "api/bin/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseEntity<Object> createUser(@RequestParam(value = "count") Integer count) throws ApiException {
         List<Long> responseObj = binDto.createBins(count);
         return ResponseHandler.generateResponse("Success", HttpStatus.OK, responseObj);
     }
 
-    @ApiOperation(value = "Add products in bins")
-    @RequestMapping(value = "/api/bin/putProducts", method = RequestMethod.POST)
+    @ApiOperation(value = "Add products to bins")
+    @RequestMapping(value = "/product", method = RequestMethod.POST)
     public ResponseEntity<Object> putProducts(@RequestBody @NotNull(message = "CSV file cannot be null") MultipartFile csvfile) throws ApiException, IOException {
         binDto.putProductsToBin(csvfile);
         return ResponseHandler.successResponse();

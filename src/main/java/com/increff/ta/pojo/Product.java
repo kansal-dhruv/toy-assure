@@ -1,81 +1,40 @@
 package com.increff.ta.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "assure_product")
+@Table(name = "assure_product", uniqueConstraints = @UniqueConstraint(columnNames = {"clientId", "clientSkuId"}))
+@Getter
+@Setter
 public class Product extends AbstractModel {
 
-    @Column(unique = true)
-    protected String clientSkuId;
+    @NotBlank
+    private String clientSkuId;
 
-    protected String name;
+    @NotBlank
+    private String name;
 
-    protected String brandId;
+    @NotBlank
+    private String brandId;
 
-    protected Double mrp;
+    @NotNull
+    @Min(0)
+    private Double mrp;
 
-    protected String description;
+    @NotBlank
+    private String description;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long globalSkuId;
 
+    @NotNull
     private Long clientId;
 
-    public Long getGlobalSkuId() {
-        return globalSkuId;
-    }
-
-    public void setGlobalSkuId(Long globalSkuId) {
-        this.globalSkuId = globalSkuId;
-    }
-
-    public Long getClient() {
-        return clientId;
-    }
-
-    public void setClient(Long clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getClientSkuId() {
-        return clientSkuId;
-    }
-
-    public void setClientSkuId(String clientSkuId) {
-        this.clientSkuId = clientSkuId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getBrandId() {
-        return brandId;
-    }
-
-    public void setBrandId(String brandId) {
-        this.brandId = brandId;
-    }
-
-    public Double getMrp() {
-        return mrp;
-    }
-
-    public void setMrp(Double mrp) {
-        this.mrp = mrp;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

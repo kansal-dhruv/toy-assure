@@ -4,8 +4,10 @@ import com.increff.ta.pojo.ChannelListing;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 @Repository
+@Transactional
 public class ChannelListingDao extends AbstractDao {
 
     private final String select_by_channelSku_channelId_globalSku_id =
@@ -24,7 +26,7 @@ public class ChannelListingDao extends AbstractDao {
         return query.getResultList().stream().findFirst().orElse(null);
     }
 
-    public ChannelListing findByChannelIdAndChannelSkuidAndClientId(Long clientId, Long channelId, String channelSkuId) {
+    public ChannelListing findByChannelIdAndChannelSkuidAndClientId(Long channelId, String channelSkuId, Long clientId) {
         TypedQuery<ChannelListing> query = getQuery(select_by_channelSku_channelId_clientId, ChannelListing.class);
         query.setParameter("channelId", channelId);
         query.setParameter("channelSkuId", channelSkuId);

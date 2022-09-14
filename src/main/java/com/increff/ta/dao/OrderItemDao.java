@@ -4,9 +4,11 @@ import com.increff.ta.pojo.OrderItem;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
+@Transactional
 public class OrderItemDao extends AbstractDao {
 
     private final String find_by_orderId = "SELECT e from OrderItem e where e.orderId=:orderId";

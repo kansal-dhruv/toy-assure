@@ -1,6 +1,11 @@
 package com.increff.ta.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "assure_channel_lisitng",
@@ -10,57 +15,23 @@ import javax.persistence.*;
                         "channelId",
                         "globalSkuId"
                 }))
+@Setter
+@Getter
 public class ChannelListing extends AbstractModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private Long channelId;
 
+    @NotBlank
     private String channelSkuId;
 
+    @NotNull
     private Long clientId;
 
+    @NotNull
     private Long globalSkuId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getChannelSkuId() {
-        return channelSkuId;
-    }
-
-    public void setChannelSkuId(String channelSkuId) {
-        this.channelSkuId = channelSkuId;
-    }
-
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
-    }
-
-    public Long getGlobalSkuId() {
-        return globalSkuId;
-    }
-
-    public void setGlobalSkuId(Long globalSkuId) {
-        this.globalSkuId = globalSkuId;
-    }
 }

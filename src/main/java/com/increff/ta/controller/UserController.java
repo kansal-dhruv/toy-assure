@@ -16,13 +16,14 @@ import javax.validation.Valid;
 
 @Api
 @RestController
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
     private UserDto userDto;
 
     @ApiOperation(value = "Used to create new users")
-    @RequestMapping(value = "api/user/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserForm userData) {
         userDto.createUser(userData);
         return ResponseHandler.successResponse();

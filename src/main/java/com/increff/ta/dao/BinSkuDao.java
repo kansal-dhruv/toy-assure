@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
+@Transactional
 public class BinSkuDao extends AbstractDao {
 
     private final String select_by_globalSkuId = "SELECT e from BinSku e where e.globalSkuId=:globalSkuId ORDER BY e.quantity DESC";
@@ -36,7 +37,6 @@ public class BinSkuDao extends AbstractDao {
 
     }
 
-    @Transactional
     public BinSku insertOrUpdate(BinSku binSku) {
         return em.merge(binSku);
     }

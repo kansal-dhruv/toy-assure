@@ -4,8 +4,10 @@ import com.increff.ta.pojo.Orders;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 @Repository
+@Transactional
 public class OrderDao extends AbstractDao {
 
     private final String find_by_channelOrderId = "SELECT e from Orders e where e.channelOrderId=:channelOrderId";

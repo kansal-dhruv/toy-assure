@@ -1,42 +1,30 @@
 package com.increff.ta.pojo;
 
 import com.increff.ta.enums.UserType;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "assure_user", uniqueConstraints = {@UniqueConstraint(columnNames = {"name","type"})})
+@Table(name = "assure_user",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"name", "type"})})
+@Getter
+@Setter
 public class User extends AbstractModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private String name;
+  //TODO hiberntae naming steategy
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private UserType type;
+  @NotBlank
+  private String name;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public UserType getType() {
-        return type;
-    }
-
-    public void setType(UserType type) {
-        this.type = type;
-    }
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  private UserType type;
 }

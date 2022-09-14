@@ -8,12 +8,12 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 @Repository
+@Transactional
 public class BinDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public Bin create(Bin bin) {
         return em.merge(bin);
     }

@@ -1,59 +1,40 @@
 package com.increff.ta.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "assure_inventory")
+@Getter
+@Setter
 public class Inventory extends AbstractModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    @NotNull
     private Long globalSkuId;
 
+    @NotNull
+    @Min(0)
+    @ColumnDefault("0")
     private Long availableQuantity = 0L;
 
+    @NotNull
+    @Min(0)
+    @ColumnDefault("0")
     private Long allocatedQuantity = 0L;
 
+    @NotNull
+    @Min(0)
+    @ColumnDefault("0")
     private Long fulfilledQuantity = 0L;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getGlobalSkuId() {
-        return globalSkuId;
-    }
-
-    public void setGlobalSkuId(Long globalSkuId) {
-        this.globalSkuId = globalSkuId;
-    }
-
-    public Long getAvailableQuantity() {
-        return availableQuantity;
-    }
-
-    public void setAvailableQuantity(Long availableQuantity) {
-        this.availableQuantity = availableQuantity;
-    }
-
-    public Long getAllocatedQuantity() {
-        return allocatedQuantity;
-    }
-
-    public void setAllocatedQuantity(Long allocatedQuantity) {
-        this.allocatedQuantity = allocatedQuantity;
-    }
-
-    public Long getFulfilledQuantity() {
-        return fulfilledQuantity;
-    }
-
-    public void setFulfilledQuantity(Long fulfilledQuantity) {
-        this.fulfilledQuantity = fulfilledQuantity;
-    }
 }
