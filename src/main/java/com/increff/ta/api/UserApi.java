@@ -1,27 +1,34 @@
 package com.increff.ta.api;
 
+import com.increff.ta.commons.model.enums.UserType;
 import com.increff.ta.dao.UserDao;
-import com.increff.ta.enums.UserType;
-import com.increff.ta.pojo.User;
+import com.increff.ta.pojo.UserPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class UserApi {
 
-    @Autowired
-    private UserDao userDao;
+  private final UserDao userDao;
 
-    public void createUser(User user) {
-        userDao.insert(user);
-    }
+  @Autowired
+  public UserApi(UserDao userDao) {
+    this.userDao = userDao;
+  }
 
-    public User getUserById(Long userId){
-        return userDao.selectById(userId);
-    }
+  public UserPojo createUser(UserPojo userPojo) {
+    return userDao.insert(userPojo);
+  }
 
-    public User getUserByNameAndType(String userName, UserType type){
-        return userDao.selectByNameAndType(userName, type);
-    }
+  public UserPojo getUserById(Long userId) {
+    return userDao.selectById(userId);
+  }
+
+  public UserPojo getUserByNameAndType(String userName, UserType type) {
+    return userDao.selectByNameAndType(userName, type);
+  }
 
 }

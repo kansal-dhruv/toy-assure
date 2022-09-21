@@ -1,25 +1,23 @@
 package com.increff.ta.dao;
 
-import com.increff.ta.pojo.OrderItem;
+import com.increff.ta.pojo.OrderItemPojo;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-@Transactional
 public class OrderItemDao extends AbstractDao {
 
-    private final String find_by_orderId = "SELECT e from OrderItem e where e.orderId=:orderId";
+  private final String find_by_orderId = "SELECT e from OrderItemPojo e where e.orderId=:orderId";
 
-    public OrderItem saveOrUpdate(OrderItem orderItem) {
-        return em.merge(orderItem);
-    }
+  public OrderItemPojo saveOrUpdate(OrderItemPojo orderItemPojo) {
+    return em.merge(orderItemPojo);
+  }
 
-    public List<OrderItem> findByOrderId(Long orderId) {
-        TypedQuery<OrderItem> query = getQuery(find_by_orderId, OrderItem.class);
-        query.setParameter("orderId", orderId);
-        return query.getResultList();
-    }
+  public List<OrderItemPojo> findByOrderId(Long orderId) {
+    TypedQuery<OrderItemPojo> query = getQuery(find_by_orderId, OrderItemPojo.class);
+    query.setParameter("orderId", orderId);
+    return query.getResultList();
+  }
 }

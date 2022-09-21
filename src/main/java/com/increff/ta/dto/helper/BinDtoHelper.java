@@ -1,8 +1,8 @@
 package com.increff.ta.dto.helper;
 
-import com.increff.ta.api.ApiException;
+import com.increff.ta.commons.exception.ApiException;
+import com.increff.ta.commons.model.BinClientSkuCSV;
 import com.increff.ta.constants.Constants;
-import com.increff.ta.model.BinClientSkuCSV;
 import com.increff.ta.utils.CSVUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +21,8 @@ public class BinDtoHelper {
     List<BinClientSkuCSV> binQuantityList;
     try {
       binQuantityList = CSVUtils.parseCSV(csvFile.getBytes(), BinClientSkuCSV.class);
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       throw new ApiException(Constants.CODE_ERROR_PARSING_CSV_FILE, Constants.MSG_ERROR_PARSING_CSV_FILE);
     }
     Set<String> binIdClientSkuIdsMapping = binQuantityList.stream().map(binQuantity -> binQuantity.getBinId() + binQuantity.getClientSkuId()).collect(Collectors.toSet());

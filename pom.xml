@@ -7,7 +7,6 @@
     <artifactId>toy-assure</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-
     <name>ToyAssure</name>
     <url>http://maven.apache.org</url>
 
@@ -195,7 +194,19 @@
             <artifactId>gson</artifactId>
             <version>2.9.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.increff</groupId>
+            <artifactId>toy-assure-commons</artifactId>
+            <scope>system</scope>
+            <version>0.0.1-SNAPSHOT</version>
+            <systemPath>${project.basedir}/../toy-assure-commons/target/toy-assure-commons-1.0-SNAPSHOT.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
 
 
     </dependencies>

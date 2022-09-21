@@ -1,19 +1,15 @@
 package com.increff.ta.controller;
 
-import com.increff.ta.api.ApiException;
-import com.increff.ta.controller.handler.ResponseHandler;
+import com.increff.ta.commons.exception.ApiException;
 import com.increff.ta.dto.BinDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.util.List;
 
 @Api
@@ -22,20 +18,22 @@ import java.util.List;
 @RequestMapping("/api/bin")
 public class BinController {
 
-    @Autowired
-    private BinDto binDto;
+  private final BinDto binDto;
 
-    @ApiOperation(value = "Used to create new bins")
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ResponseEntity<Object> createUser(@RequestParam(value = "count") Integer count) throws ApiException {
-        List<Long> responseObj = binDto.createBins(count);
-        return ResponseHandler.generateResponse("Success", HttpStatus.OK, responseObj);
-    }
+  @Autowired
+  public BinController(BinDto binDto) {
+    this.binDto = binDto;
+  }
 
-    @ApiOperation(value = "Add products to bins")
-    @RequestMapping(value = "/product", method = RequestMethod.POST)
-    public ResponseEntity<Object> putProducts(@RequestBody @NotNull(message = "CSV file cannot be null") MultipartFile csvfile) throws ApiException, IOException {
-        binDto.putProductsToBin(csvfile);
-        return ResponseHandler.successResponse();
-    }
+  @ApiOperation(value = "Used to create new bins")
+  @RequestMapping(value = "/create", method = RequestMethod.POST)
+  public List<Long> createUser(@RequestParam(value = "count") Integer count) throws ApiException {
+    return binDto.createBins(count);
+  }
+
+  @ApiOperation(value = "Add products to bins")
+  @RequestMapping(value = "/product", method = RequestMethod.POST)
+  public void putProducts(@RequestBody @NotNull(message = "CSV file cannot be null") MultipartFile csvfile) throws ApiException {
+    binDto.putProductsToBin(csvfile);
+  }
 }

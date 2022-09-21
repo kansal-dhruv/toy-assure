@@ -6,14 +6,10 @@ import javax.persistence.TypedQuery;
 
 public abstract class AbstractDao {
 
-    @PersistenceContext
-    protected EntityManager em;
+  @PersistenceContext
+  protected EntityManager em;
 
-    protected <T> TypedQuery<T> getQuery(String jpql, Class<T> clazz) {
-        return em.createQuery(jpql, clazz);
-    }
-
-    public void detach(Object o) {
-        em.detach(o);
-    }
+  protected <T> TypedQuery<T> getQuery(String jpql, Class<T> clazz) {
+    return em.createQuery(jpql, clazz);
+  }
 }

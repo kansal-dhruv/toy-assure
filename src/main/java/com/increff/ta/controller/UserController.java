@@ -1,12 +1,10 @@
 package com.increff.ta.controller;
 
-import com.increff.ta.controller.handler.ResponseHandler;
+import com.increff.ta.commons.model.UserForm;
 import com.increff.ta.dto.UserDto;
-import com.increff.ta.model.UserForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,13 +17,16 @@ import javax.validation.Valid;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
-    private UserDto userDto;
+  private final UserDto userDto;
 
-    @ApiOperation(value = "Used to create new users")
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserForm userData) {
-        userDto.createUser(userData);
-        return ResponseHandler.successResponse();
-    }
+  @Autowired
+  public UserController(UserDto userDto) {
+    this.userDto = userDto;
+  }
+
+  @ApiOperation(value = "Used to create new users")
+  @RequestMapping(value = "/", method = RequestMethod.POST)
+  public void createUser(@Valid @RequestBody UserForm userData) {
+    userDto.createUser(userData);
+  }
 }

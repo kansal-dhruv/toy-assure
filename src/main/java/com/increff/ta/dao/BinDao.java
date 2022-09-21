@@ -1,24 +1,22 @@
 package com.increff.ta.dao;
 
-import com.increff.ta.pojo.Bin;
+import com.increff.ta.pojo.BinPojo;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 @Repository
-@Transactional
 public class BinDao {
 
-    @PersistenceContext
-    private EntityManager em;
+  @PersistenceContext
+  private EntityManager em;
 
-    public Bin create(Bin bin) {
-        return em.merge(bin);
-    }
+  public BinPojo create(BinPojo binPojo) {
+    return em.merge(binPojo);
+  }
 
-    public Bin findById(Long binId) {
-        return em.find(Bin.class, binId);
-    }
+  public BinPojo findById(Long binId) {
+    return em.find(BinPojo.class, binId);
+  }
 }

@@ -1,13 +1,13 @@
 package com.increff.ta.dto.helper;
 
-import com.increff.ta.api.ApiException;
+import com.increff.ta.commons.exception.ApiException;
+import com.increff.ta.commons.model.ChannelForm;
+import com.increff.ta.commons.model.ChannelListingCSV;
 import com.increff.ta.constants.Constants;
-import com.increff.ta.model.ChannelForm;
-import com.increff.ta.model.ChannelListingCSV;
-import com.increff.ta.pojo.Channel;
-import com.increff.ta.pojo.ChannelListing;
-import com.increff.ta.pojo.Product;
-import com.increff.ta.pojo.User;
+import com.increff.ta.pojo.ChannelListingPojo;
+import com.increff.ta.pojo.ChannelPojo;
+import com.increff.ta.pojo.ProductPojo;
+import com.increff.ta.pojo.UserPojo;
 import com.increff.ta.utils.CSVUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,20 +31,20 @@ public class ChannelDtoHelper {
     return channelListingDetails;
   }
 
-  public static Channel convertChannelFormToPojo(ChannelForm channelForm) {
-    Channel channel = new Channel();
-    channel.setName(channelForm.getName());
-    channel.setInvoiceType(channelForm.getInvoiceType());
-    return channel;
+  public static ChannelPojo convertChannelFormToPojo(ChannelForm channelForm) {
+    ChannelPojo channelPojo = new ChannelPojo();
+    channelPojo.setName(channelForm.getName());
+    channelPojo.setInvoiceType(channelForm.getInvoiceType());
+    return channelPojo;
   }
 
-  public static ChannelListing convertCSVtoPojo(ChannelListingCSV channelListingCSV, Channel channel, User client,
-                                          Product product) {
-    ChannelListing channelListing = new ChannelListing();
-    channelListing.setChannelId(channel.getId());
-    channelListing.setClientId(client.getId());
-    channelListing.setChannelSkuId(channelListingCSV.getChannelSkuId());
-    channelListing.setGlobalSkuId(product.getGlobalSkuId());
-    return channelListing;
+  public static ChannelListingPojo convertCSVtoPojo(ChannelListingCSV channelListingCSV, ChannelPojo channelPojo, UserPojo client,
+                                                    ProductPojo productPojo) {
+    ChannelListingPojo channelListingPojo = new ChannelListingPojo();
+    channelListingPojo.setChannelId(channelPojo.getId());
+    channelListingPojo.setClientId(client.getId());
+    channelListingPojo.setChannelSkuId(channelListingCSV.getChannelSkuId());
+    channelListingPojo.setGlobalSkuId(productPojo.getGlobalSkuId());
+    return channelListingPojo;
   }
 }

@@ -1,11 +1,11 @@
 package com.increff.ta.dto.helper;
 
-import com.increff.ta.model.UserForm;
-import com.increff.ta.pojo.User;
+import com.increff.ta.commons.model.UserForm;
+import com.increff.ta.pojo.UserPojo;
 
 public class UserDtoHelper {
-  public static User convertFormToPojo(UserForm userForm) {
-    User userPojo = new User();
+  public static UserPojo convertFormToPojo(UserForm userForm) {
+    UserPojo userPojo = new UserPojo();
     userPojo.setName(userForm.getName());
     userPojo.setType(userForm.getType());
     return userPojo;
