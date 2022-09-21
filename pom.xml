@@ -7,7 +7,6 @@
     <artifactId>toy-assure</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-
     <name>ToyAssure</name>
     <url>http://maven.apache.org</url>
 
@@ -20,7 +19,7 @@
         <!-- Project dependencies -->
         <spring.version>4.3.6.RELEASE</spring.version>
         <swagger.version>2.4.0</swagger.version>
-        <jackson.version>2.12.0</jackson.version>
+        <jackson.version>2.13.4</jackson.version>
         <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
         <hibernate.version>5.4.0.Final</hibernate.version>
         <mysql.version>8.0.17</mysql.version>
@@ -30,7 +29,7 @@
         <commons-dbcp.version>1.4</commons-dbcp.version>
 
         <!-- Jetty configuration -->
-        <jetty.version>9.4.21.v20190926</jetty.version>
+        <jetty.version>9.4.13.v20181111</jetty.version>
         <jetty.http.port>9000</jetty.http.port>
         <jetty.context>/toyassure</jetty.context>
         <failOnMissingWebXml>false</failOnMissingWebXml>
@@ -178,9 +177,35 @@
         </dependency>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.0.13.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.increff</groupId>
+            <artifactId>toy-assure-commons</artifactId>
+            <scope>system</scope>
+            <version>0.0.1-SNAPSHOT</version>
+            <systemPath>${project.basedir}/../toy-assure-commons/target/toy-assure-commons-1.0-SNAPSHOT.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
         </dependency>
 
 

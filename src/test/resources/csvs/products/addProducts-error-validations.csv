@@ -1,0 +1,12 @@
+clientSkuId,name,brandId,mrp,description
+,jeans1,1,1000,Blue Jeans
+p2,,2,1100,Blue Jeans
+p3,jeans3,,1200,Blue Jeans
+p4,jeans4,4,,Blue Jeans
+p5,jeans5,5,1400,
+,,6,1500,Blue Jeans
+p7,jeans7,-7,1600,Blue Jeans
+p8,jeans8,8,-1700,Blue Jeans
+p9,jeans9,9,0,Blue Jeans
+p10,jeans10,-10,-2000,Blue Jeans
+p11,jeans11,11,abc,Blue Jeans
